@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>STOCKMESH</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link href="vendor/datatables/buttons.bootstrap4.min.css" rel="stylesheet">
+  <link href="css/toastr.min.css" rel="stylesheet" type="text/css">
+  <link href="css/custom.css" rel="stylesheet">
+  <!-- <link href="css/select2.min.css" rel="stylesheet" /> -->
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Loader -->
+      <!-- <div class="loading">Loading&#8230;</div> -->
+      <!-- Loader End -->
+
+      <!-- Export Excel Modal -->
+      <div class="modal" id="exportExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content shadow theme-modal">
+            <div class="card-header card_header">
+              <h6 class="m-0 font-weight-bold theme-modal-header" style="color: #14274A;">Export Excel Design</h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="card-body theme-modal-body">
+                <table class="table borderless" style="margin-bottom: 0!important;">
+                  <tbody>
+                    <tr>
+                      <td style="width: 30%;">
+                        <select id="exportExcelDrop" class="form-control bg-light border-0 small">
+                          <option disabled selected value="">Select Option</option>
+                          <option value="selected">Selected</option>
+                          <option value="huid">HUID</option>
+                          <option value="allinstock">Instock</option>
+                        </select>
+                        <div id="itemId_error" class="error-message"></div>
+                      </td>
+                      <th style="width: 15%; line-height: 2.5; color: #14274A;"></th>
+                      <td style="width: 18%;">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer theme-modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" onclick="exportExcelDesigns()" class="btn btn-primary">Export</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow"
+          style="position: fixed;z-index: 10;width: 100%; background-color: #14274A;">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <div class="nav-header-text mr-3">
+            Barcode Printing
+          </div>
+
+          <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link" id="nav-home-tab" href="/">Home</a>
+            <a class="nav-item nav-link" id="nav-scan-tab" href="/scan.html">Scan</a>
+            <a class="nav-item nav-link" id="nav-master-tab" href="/master.html">Master</a>
+          </div>
+        </nav>
+        <!-- End of Topbar -->
+        <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+          <div class="container-fluid" style="position: absolute; margin-top: 3rem;">
+            <div class="row pt-4 pb-4">
+              <div class="col-md-4 offset-md-4">
+                <input type="text" class="form-control" placeholder="Enter SKU Number" id="designNo"
+                  onchange="addDesignByNumber()" />
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <select class="form-control btn-sm" id="pdfTemplate">
+                      <option value="" disabled>Select Template</option>
+                      <option value="1" selected>Template 1</option>
+                      <option value="2">Template 2</option>
+                      <option value="3">Template 3</option>
+                    </select>
+                  </div>
+                  <div class="col-lg-6">
+                    <button class="btn btn-secondary btn-sm" id="printPDF">Save PDF</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row pb-1">
+                <!-- <div class="col-md-2">
+                  <input type="date" class="form-control btn-sm" id="transDate" name="transDate"
+                    style="width: 75% !important" />
+                </div>
+                <div class="col-md-1">
+                  <select class="form-control btn-sm" id="transSubType">
+                    <option value="Issue">Issue</option>
+                    <option value="Return">Return</option>
+                    <option value="Approval">Approval</option>
+                  </select>
+                </div>
+                <div class="col-md-1">
+                  <select class="form-control btn-sm" id="upCustSalesType" onchange="getAccountByType()">
+                    <option value="Customer">Customer</option>
+                    <option value="Salesman">Salesman</option>
+                  </select>
+                </div>
+                <div class="col-md-1">
+                  <input type="text" id="billNo" class="form-control btn-sm" placeholder="Bill No" />
+                </div>
+                <div class="col-md-2">
+                  <select id="cust_sales_name" class="form-control  btn-sm"></select>
+                </div>
+                <div class="col-md-1">
+                  <input type="text" id="transRemark" class="form-control btn-sm" placeholder="Enter Remark" style="width: 200%" />
+                </div> -->
+                <!-- <div class="col-md-1" style="line-height: 2.5rem;">
+                  <input type="checkbox" id="deleteIssueDesign" />&nbsp;&nbsp;<label style="font-size:.875rem">Delete</label>
+                </div> -->
+                <div class="col-md-4 float-left">
+                  <!-- <button type="button" class="btn btn-secondary btn-sm"
+                    onclick="updateStatusSalesCustomer()">Submit</button> -->
+                  <!-- <button class="btn btn-secondary btn-sm" id="exportExcel">Excel Export</button> -->
+                  <!-- <button class="btn btn-secondary btn-sm" id="printPDF">Save PDF</button> -->
+                  <button class="btn btn-secondary btn-sm" onclick="clearBarCodeForm()">Clear All</button>
+                </div>
+              </div>
+            </div>
+            <!-- Page Wrapper -->
+            <div id="wrapper">
+              <!-- Content Wrapper -->
+              <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered" id="designResult" width="100%" cellspacing="0"
+                      style="font-size: 12px;">
+                      <thead class="table-head">
+                        <tr>
+                          <th class="dt-heading"></th>
+                          <th class="dt-heading">Image</th>
+                          <th class="dt-heading">Design Number</th>
+                          <th class="dt-heading">Category</th>
+                          <th class="dt-heading">Gross Wt</th>
+                          <th class="dt-heading">Stone Wt</th>
+                          <th class="dt-heading">Beads Wt</th>
+                          <th class="dt-heading">Extra Stone Wt</th>
+                          <th class="dt-heading">Net Wt</th>
+                          <th class="dt-heading">Code</th>
+                          <th class="dt-heading">Color</th>
+                          <th class="dt-heading">Purity</th>
+                          <th class="dt-heading"></th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-bordered" id="designResultBody">
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+              <!-- End of Content Wrapper -->
+            </div>
+
+            <!-- /.container-fluid -->
+
+          </div>
+        </div>
+      </div>
+      <!-- End of Main Content -->
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Data-Tables -->
+  <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="vendor/datatables/dataTables.buttons.min.js"></script>
+  <script src="vendor/datatables/buttons.bootstrap4.min.js"></script>
+  <script src="vendor/datatables/buttons.html5.min.js"></script>
+  <script src="vendor/datatables/pdfmake.min.js"></script>
+  <script src="vendor/datatables/vfs_fonts.js"></script>
+  <script src="vendor/datatables/jszip.min.js"></script>
+  <script src="js/moment.min.js"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <!-- <script src="js/select2.min.js"></script> -->
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <script src="js/toastr.min.js"></script>
+
+  <script src="js/custom/main.js"></script>
+  <script src="js/custom/scan.js"></script>
+
+</body>
+
+</html>

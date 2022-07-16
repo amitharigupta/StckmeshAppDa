@@ -1,0 +1,31 @@
+Template1 Start
+"x": "200", "y": "40", "type": "128", "height": "40", "readable": "0", "rotation": "180", "narrow": "1", "wide": "2", "code": "${designNumber}"
+"quantity": "1", "copy": "1"
+QRCODE 80,13,H,3,A,0,M2,S7,\"${skuNumber}\"
+TEXT 250,10,\"0\",0,7,7,\"G Wt   : ${grossWeight}\"
+TEXT 250,29,\"0\",0,6,6,\"S Wt : ${stoneWeight}\"
+TEXT 250,48,\"0\",0,6,6,\"C Wt : ${centerStoneWeight}\"
+TEXT 250,67,\"0\",0,7,7,\"N Wt   : ${netWeight}\"
+TEXT 65,13,\"0\",90,6,6,\"${designNumber}\"
+Template1 End
+
+Template2 Start
+"x": "100", "y": "40", "type": "128", "height": "0", "readable": "0", "rotation": "180", "narrow": "1", "wide": "2", "code": "${designNumber}"
+"quantity": "1", "copy": "1"
+QRCODE 80,13,H,3,A,0,M2,S7,\"${skuNumber}\"
+QRCODE 270,60,H,2,A,180,M2,S7,\"${designNumber}\"
+TEXT 200,85,\"0\",180,9,10,\"${designNumber}\"
+TEXT 200,60,\"0\",180,8,8,\" M-${metalPurity}\"
+TEXT 425,85,\"0\",180,9,9,\"D No : ${designNumber}\"
+TEXT 425,60,\"0\",180,8,8,\"G Wt   : ${grossWeight}\"
+TEXT 425,40,\"0\",180,8,8,\"S Wt   : ${stoneWeight}\"
+TEXT 425,20,\"0\",180,8,8,\"N Wt   : ${netWeight}\"
+Template2 End
+
+Template3 Start
+"x": "200", "y": "50", "type": "128", "height": "40", "readable": "0", "rotation": "180", "narrow": "1", "wide": "2", "code": "${designNumber}"
+"quantity": "1", "copy": "1"
+TEXT 200,78,\"0\",180,10,10,\"${designNumber}\"
+TEXT 425,83,\"0\",180,7,7,\"CS Wt: ${colourStoneWeight}\"
+TEXT 425,53,\"0\",180,7,7,\"S Wt   : ${stoneWeight}/${stoneCount}\"
+Template3 End

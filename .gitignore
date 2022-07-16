@@ -1,0 +1,7 @@
+/.tmp
+/swagger
+/Json_key
+/.idea
+images/
+/node_modules
+.vscode

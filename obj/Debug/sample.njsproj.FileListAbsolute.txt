@@ -1,0 +1,3 @@
+D:\ted_chen\Desktop\Printer\TSC\NODEJS\example\usb_sample\sample\bin\Microsoft.NodejsTools.WebRole.dll
+D:\ted_chen\Desktop\Printer\TSC\NODEJS\example\usb_sample\sample\obj\Debug\sample.njsprojAssemblyReference.cache
+D:\ted_chen\Desktop\Printer\TSC\NODEJS\example\usb_sample\sample\obj\Debug\sample.njsproj.CoreCompileInputs.cache
