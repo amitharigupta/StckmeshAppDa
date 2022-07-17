@@ -68,7 +68,7 @@ let designFormFields = [
         'fieldName': 'code',
         'validations': [
             // { 'type': 'required', 'message': 'Colour is Required' },
-            { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
         ]
     },
     {
@@ -147,6 +147,21 @@ function getCategoryPrefixByID(id) {
     }
     return categoryPrefix
 }
+
+
+let codeObj = ["Y", "K", "A", "N", "P", "U", "R", "C", "I", "T"]
+function calcSeventyPercentWeight(modal) {
+    let stoneWt = isNaN(parseFloat($(modal+ ' #stoneWt').val())) ? 0 : parseFloat($(modal+ ' #stoneWt').val()) 
+    let beadWt = isNaN(parseFloat($(modal+ ' #beadWt').val())) ? 0 : parseFloat($(modal+ ' #beadWt').val()) 
+    let extraStoneWt = isNaN(parseFloat($(modal+ ' #extraStoneWt').val())) ? 0 : parseFloat($(modal+ ' #extraStoneWt').val()) 
+    let seventyPercentStoneWt = 0;
+    seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(3);
+    seventyPercentStoneWtSplit = String(seventyPercentStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let code = seventyPercentStoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+    $(modal + ' #code').val(code.join(""))
+    return seventyPercentStoneWt
+}
+
 
 $('#addDesignModal #categoryId').on('change', function () {
     getDesignNumberByCategory("#addDesignModal", $("#addDesignModal #categoryId").val())
@@ -251,7 +266,6 @@ async function getCategorys() {
     }
 }
 
-
 async function setDataTable() {
     var table = $('#dataTable').DataTable({
         "data": designs.rows,
@@ -264,9 +278,17 @@ async function setDataTable() {
                 "data": null,
                 "width": "5%",
                 "render": function (data, type, row) {
-                    // console.log(row)
                     return '<input type="checkbox" id="checkbox_' + row.id + '" name="designSelect" style="width: 1em;height: 1em;margin-top: 7px;">';
                 }
+            },
+            {
+                "width": "5%",
+                "render": function (data, type, full, meta) {
+                    return meta.row + 1;
+                }
+            },
+            {
+                "data": "designNumber",
             },
             {
                 data: "imageName",
@@ -279,9 +301,6 @@ async function setDataTable() {
                 },
             },
             {
-                "data": "designNumber",
-            },
-            {
                 "data": "categoryId",
                 "render": function (data) {
                     return getCategoryNameByID(data)
@@ -291,25 +310,10 @@ async function setDataTable() {
                 "data": "grossWt",
             },
             {
-                "data": "stoneWt",
-            },
-            {
-                "data": "beadWt",
-            },
-            {
-                "data": "extraStoneWt",
-            },
-            {
-                "data": "netWt",
+                "data": "purity",
             },
             {
                 "data": "code",
-            },
-            {
-                "data": "color",
-            },
-            {
-                "data": "purity",
             },
             {
                 "orderable": false,
@@ -428,6 +432,9 @@ async function updateDesign() {
             if (base64String != "") {
                 body.imageName = base64String
             }
+            let seventyStoneWt = calcSeventyPercentWeight('#updateDesignModal')
+            if(seventyStoneWt)
+                body.seventyStoneWt = seventyStoneWt
             let response = await fetch(api_endpoint + 'design/' + selectedDesign.id, {
                 method: 'PATCH',
                 headers: {
@@ -541,6 +548,9 @@ async function addDesign() {
             if (base64String != "") {
                 body.imageName = base64String
             }
+            let seventyStoneWt = calcSeventyPercentWeight('#addDesignModal')
+            if(seventyStoneWt)
+                body.seventyStoneWt = seventyStoneWt
             let response = await fetch(api_endpoint + 'design/', {
                 method: 'POST',
                 headers: {

@@ -162,7 +162,7 @@ async function setDataTableCategory() {
     ],
     "columns": [
       {
-        "width": "15%",
+        "width": "10%",
         "render": function (data, type, full, meta) {
           return meta.row + 1;
         }

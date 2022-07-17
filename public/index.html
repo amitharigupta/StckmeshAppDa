@@ -77,7 +77,7 @@
                       <tr>
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Category</th>
                         <td style="width: 18%;">
-                          <select id="categoryId" class="form-control bg-light border-0 small" onchange="validateForm('updateDesignModal','categoryId'); getDesignNumberByCategory(categoryId);">
+                          <select id="categoryId" class="form-control bg-light border-0 small" onchange="validateForm('updateDesignModal','categoryId'); getDesignNumberByCategory(categoryId);" disabled>
                             <option disabled selected value="">Select Category</option>
                           </select>
                           <div id="categoryId_error" class="error-message"></div>
@@ -86,7 +86,7 @@
                         <td style="width: 18%;">
                           <input id="designNumber" onchange="validateForm('updateDesignModal','designNumber')" type="text"
                             class="form-control bg-light border-0 small" placeholder="Enter Design Number"
-                            aria-label="Search" aria-describedby="basic-addon2" required>
+                            aria-label="Search" aria-describedby="basic-addon2" required disabled>
                           <div id="designNumber_error" class="error-message"></div>
                         </td>
                       </tr>
@@ -110,7 +110,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Stone Weight</th>
                         <td style="width: 18%;">
                           <input id="stoneWt"
-                            onchange="validateForm('updateDesignModal','stoneWt'); fnCalculate();" type="text"
+                            onchange="validateForm('updateDesignModal','stoneWt'); fnCalculate(); calcSeventyPercentWeight();" type="text"
                             class="form-control bg-light border-0 small stone" placeholder="Enter Stone Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="stoneWt_error" class="error-message"></div>
@@ -129,7 +129,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Beads Weight</th>
                         <td style="width: 18%;">
                           <input id="beadWt"
-                            onchange="validateForm('updateDesignModal','beadWt'); fnCalculate();" type="text"
+                            onchange="validateForm('updateDesignModal','beadWt'); fnCalculate(); calcSeventyPercentWeight();" type="text"
                             class="form-control bg-light border-0 small gross" placeholder="Enter beads Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="beadWt_error" class="error-message"></div>
@@ -137,7 +137,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Extra Stone Weight</th>
                         <td style="width: 18%;">
                           <input id="extraStoneWt"
-                            onchange="validateForm('updateDesignModal','extraStoneWt'); fnCalculate();" type="text"
+                            onchange="validateForm('updateDesignModal','extraStoneWt'); fnCalculate(); calcSeventyPercentWeight();" type="text"
                             class="form-control bg-light border-0 small stone" placeholder="Enter Extra Stone Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="extraStoneWt_error" class="error-message"></div>
@@ -163,7 +163,7 @@
                         <td style="width: 18%;">
                           <input id="code" onchange="validateForm('updateDesignModal','code')" type="text"
                             class="form-control bg-light border-0 small" placeholder="Enter Code"
-                            aria-label="Search" aria-describedby="basic-addon2" required>
+                            aria-label="Search" aria-describedby="basic-addon2" required readonly>
                           <div id="code_error" class="error-message"></div>
                         </td>
                      </tr>
@@ -202,6 +202,9 @@
                         <td style="width: 18%;">
                           <input type="file" id="imageName" accept="image/jpeg, image/png, image/jpg">
                           <div id="imageName_error" class="error-message"></div>
+                        </td>
+                        <th style="width: 15%; color: #14274A;"></th>
+                        <td style="width: 15%;">
                         </td>
                       </tr>
                     </tbody>
@@ -328,7 +331,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Stone Weight</th>
                         <td style="width: 18%;">
                           <input id="stoneWt"
-                            onchange="validateForm('addDesignModal','stoneWt'); fnCalculate();" type="text"
+                            onchange="validateForm('addDesignModal','stoneWt'); fnCalculate(); calcSeventyPercentWeight('#addDesignModal');" type="text"
                             class="form-control bg-light border-0 small stone" placeholder="Enter Stone Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="stoneWt_error" class="error-message"></div>
@@ -347,7 +350,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Beads Weight</th>
                         <td style="width: 18%;">
                           <input id="beadWt"
-                            onchange="validateForm('addDesignModal','beadWt'); fnCalculate();" type="text"
+                            onchange="validateForm('addDesignModal','beadWt'); fnCalculate(); calcSeventyPercentWeight('#addDesignModal');" type="text"
                             class="form-control bg-light border-0 small gross" placeholder="Enter beads Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="beadWt_error" class="error-message"></div>
@@ -355,7 +358,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Extra Stone Weight</th>
                         <td style="width: 18%;">
                           <input id="extraStoneWt"
-                            onchange="validateForm('addDesignModal','extraStoneWt'); fnCalculate();" type="text"
+                            onchange="validateForm('addDesignModal','extraStoneWt'); fnCalculate(); calcSeventyPercentWeight('#addDesignModal');" type="text"
                             class="form-control bg-light border-0 small stone" placeholder="Enter Extra Stone Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="extraStoneWt_error" class="error-message"></div>
@@ -381,7 +384,7 @@
                         <td style="width: 18%;">
                           <input id="code" onchange="validateForm('addDesignModal','code')" type="text"
                             class="form-control bg-light border-0 small" placeholder="Enter Code"
-                            aria-label="Search" aria-describedby="basic-addon2" required>
+                            aria-label="Search" aria-describedby="basic-addon2" required readonly>
                           <div id="code_error" class="error-message"></div>
                         </td>
                      </tr>
@@ -420,8 +423,11 @@
                       <tr> 
                         <th style="width: 15%; color: #14274A;">Upload Image</th>
                         <td style="width: 18%;">
-                          <input type="file" id="imageName" accept="image/jpeg, image/png, image/jpg">
+                          <input type="file" id="imageName" class="form-control bg-light border-0 small" accept="image/jpeg, image/png, image/jpg">
                           <div id="imageName_error" class="error-message"></div>
+                        </td>
+                        <th style="width: 15%; color: #14274A;"></th>
+                        <td style="width: 15%;">
                         </td>
                       </tr>
                     </tbody>
@@ -517,17 +523,13 @@
                           <thead class="table-head">
                             <tr>
                               <th class="dt-heading"></th>
-                              <th class="dt-heading">Image</th>
+                              <th class="dt-heading">Sr No</th>
                               <th class="dt-heading">Design Number</th>
+                              <th class="dt-heading">Image</th>
                               <th class="dt-heading">Category</th>
                               <th class="dt-heading">Gross Wt</th>
-                              <th class="dt-heading">Stone Wt</th>
-                              <th class="dt-heading">Beads Wt</th>
-                              <th class="dt-heading">Extra Stone Wt</th>
-                              <th class="dt-heading">Net Wt</th>
-                              <th class="dt-heading">Code</th>
-                              <th class="dt-heading">Color</th>
                               <th class="dt-heading">Purity</th>
+                              <th class="dt-heading">Code</th>
                               <th class="dt-heading"></th>
                             </tr>
                           </thead>

@@ -21,6 +21,12 @@ function pad_with_zeroes(number, length = 6) {
   return my_string;
 }
 
+function calcTotalStoneWt (stoneWt, beadWt, extraStoneWt) {
+  let totalStoneWt = 0.0;
+  totalStoneWt = stoneWt + beadWt + extraStoneWt;
+  return totalStoneWt.toFixed(3);
+}
+
 module.exports = {
   createDesign: async (req, res, next) => {
     try {
@@ -51,6 +57,11 @@ module.exports = {
         req.body.skuNumber = req.body.designNumber
       if (req.body.itemStatus == undefined)
         req.body.itemStatus = 'INSTOCK'
+
+      let stoneWt = parseFloat(req.body.stoneWt);
+      let beadWt = parseFloat(req.body.beadWt);
+      let extraStoneWt = parseFloat(req.body.extraStoneWt);
+      req.body.totalStoneWt = calcTotalStoneWt(stoneWt, beadWt, extraStoneWt)
 
       let design = await DesignModel.createDesign(req.body)
       return res.json(responseUtils.success(design, 'Design created successfully'));
