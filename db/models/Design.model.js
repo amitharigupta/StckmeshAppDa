@@ -1,6 +1,8 @@
 const sequelize = require('../connection');
 const Sequelize = require('sequelize');
 
+const CategoryModel = require('./CategoryMaster.model');
+
 var Design = sequelize.define('design',
     {
         id: { type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, unique: true, primaryKey: true },
@@ -40,5 +42,13 @@ var Design = sequelize.define('design',
         paranoid: true, // adds deletedAt field on delete
     }
 );
+
+// define association here
+Design.belongsTo(CategoryModel, {
+    as: 'category',
+    foreignKey: 'categoryId',
+    allowNull: true,
+    targetKey: 'id'
+})
 
 module.exports = Design

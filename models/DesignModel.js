@@ -1,4 +1,5 @@
 const Design = require('../db/models/Design.model')
+const Category = require('../db/models/CategoryMaster.model')
 const { Op } = require("sequelize");
 
 module.exports = {
@@ -86,6 +87,19 @@ module.exports = {
                 'where': payload,
             });
             return designs
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    },
+    getDesignsWithCategory: async (payload) => {
+        try {
+            let design = await Design.findAll({
+                'where': payload,
+                'include': [
+                    { model: Category, as: 'category', attributes: ['id', 'categoryName', 'categoryPrefix'] }
+                ]
+            })
+            return design
         } catch (err) {
             return Promise.reject(err)
         }

@@ -151,15 +151,26 @@ function getCategoryPrefixByID(id) {
 
 let codeObj = ["Y", "K", "A", "N", "P", "U", "R", "C", "I", "T"]
 function calcSeventyPercentWeight(modal) {
-    let stoneWt = isNaN(parseFloat($(modal+ ' #stoneWt').val())) ? 0 : parseFloat($(modal+ ' #stoneWt').val()) 
-    let beadWt = isNaN(parseFloat($(modal+ ' #beadWt').val())) ? 0 : parseFloat($(modal+ ' #beadWt').val()) 
-    let extraStoneWt = isNaN(parseFloat($(modal+ ' #extraStoneWt').val())) ? 0 : parseFloat($(modal+ ' #extraStoneWt').val()) 
+    let stoneWt = isNaN(parseFloat($(modal + ' #stoneWt').val())) ? 0 : parseFloat($(modal + ' #stoneWt').val())
+    let beadWt = isNaN(parseFloat($(modal + ' #beadWt').val())) ? 0 : parseFloat($(modal + ' #beadWt').val())
+    let extraStoneWt = isNaN(parseFloat($(modal + ' #extraStoneWt').val())) ? 0 : parseFloat($(modal + ' #extraStoneWt').val())
     let seventyPercentStoneWt = 0;
     seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(3);
     seventyPercentStoneWtSplit = String(seventyPercentStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
     let code = seventyPercentStoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
     $(modal + ' #code').val(code.join(""))
+
+    let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
+    let netWt = grossWt - seventyPercentStoneWt
+    $(modal + ' #netWt').val(netWt)
     return seventyPercentStoneWt
+}
+
+document.getElementById('select-all').onclick = function () {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    for (var checkbox of checkboxes) {
+        checkbox.checked = this.checked;
+    }
 }
 
 
@@ -433,7 +444,7 @@ async function updateDesign() {
                 body.imageName = base64String
             }
             let seventyStoneWt = calcSeventyPercentWeight('#updateDesignModal')
-            if(seventyStoneWt)
+            if (seventyStoneWt)
                 body.seventyStoneWt = seventyStoneWt
             let response = await fetch(api_endpoint + 'design/' + selectedDesign.id, {
                 method: 'PATCH',
@@ -549,7 +560,7 @@ async function addDesign() {
                 body.imageName = base64String
             }
             let seventyStoneWt = calcSeventyPercentWeight('#addDesignModal')
-            if(seventyStoneWt)
+            if (seventyStoneWt)
                 body.seventyStoneWt = seventyStoneWt
             let response = await fetch(api_endpoint + 'design/', {
                 method: 'POST',
@@ -902,3 +913,69 @@ $(document).ready(function () {
         $(this).closest('tr').remove();
     });
 })
+
+
+// generate selected Design
+
+$('#generatePDF').on('click', function () {
+    try {
+        $('.loading').show();
+        const checkboxes = document.querySelectorAll('input[name="designSelect"]:checked');
+        let Ids = []
+        if (checkboxes.length == 0) {
+            toastr.error('No Design Selected')
+        }
+        else {
+            checkboxes.forEach(checkbox => {
+                Ids.push(checkbox.id.split('_')[1])
+            })
+
+            if (Ids.length > 0) {
+                getPDFDesigns(Ids)
+            }
+        }
+    } catch (error) {
+        toastr.error('Something went wrong')
+    } finally {
+        $('.loading').hide()
+    }
+});
+
+// Get selected design pdf file
+function getFormattedTime() {
+    var today = new Date();
+    var y = today.getFullYear();
+    // JavaScript months are 0-based.
+    var m = today.getMonth() + 1;
+    var d = today.getDate();
+    var h = today.getHours();
+    var mi = today.getMinutes();
+    var s = today.getSeconds();
+    return d + "-" + m + "-" + y + "-" + h + "-" + mi + "-" + s;
+  }
+  
+
+async function getPDFDesigns(IDs) {
+    try {
+        let ids = IDs
+        await fetch(api_endpoint + 'design/savedesignpdf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: ids })
+        })
+            .then(response => response.blob())
+            .then(response => {
+                const blob = new Blob([response], { type: 'application/pdf' });
+                const downloadUrl = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = downloadUrl;
+                a.download = "Design-" + getFormattedTime() + ".pdf";
+                document.body.appendChild(a);
+                a.click();
+            })
+    } catch (error) {
+        console.error(error)
+    } finally {
+        document.getElementById('select-all').checked = false;
+    }
+}
