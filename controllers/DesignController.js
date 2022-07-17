@@ -6,6 +6,13 @@ const PrinterController = require('./PrinterController');
 const path = require('path')
 const fs = require('fs');
 
+// For PDF require This library
+const { jsPDF } = require('jspdf/dist/jspdf.node.min')
+require('jspdf-autotable')
+global.window = { document: { createElementNS: () => { return {} } } };
+global.navigator = {};
+global.btoa = () => { };
+
 function trimObject(obj) {
   Object.entries(obj).forEach(data => {
     if (typeof data[1] == 'string')
@@ -21,7 +28,7 @@ function pad_with_zeroes(number, length = 6) {
   return my_string;
 }
 
-function calcTotalStoneWt (stoneWt, beadWt, extraStoneWt) {
+function calcTotalStoneWt(stoneWt, beadWt, extraStoneWt) {
   let totalStoneWt = 0.0;
   totalStoneWt = stoneWt + beadWt + extraStoneWt;
   return totalStoneWt.toFixed(3);
@@ -364,5 +371,108 @@ module.exports = {
     delete global.navigator;
     delete global.btoa;
 
-  }
+  },
+
+  saveDesignsPDF: async (req, res, next) => {
+    try {
+      let { ids } = req.body
+      var doc = new jsPDF();
+      let pageWidth = doc.internal.pageSize.getWidth();
+      let pageHeight = doc.internal.pageSize.getHeight();
+      let query = { "id": ids }
+      let designDataArr = await DesignModel.getDesignsWithCategory(query)
+      // sort array and then add same objects
+      
+      let finalY = pageHeight * 0.03;
+      doc.setFontSize(10);
+      doc.text('ITEM LIST', pageWidth / 2, finalY, 'center');
+      let y = finalY + 15;
+      let columns = [["Sr", "Design Number", "Category", "Gross Wt", "Stone Wt", "Bead Wt", "Extra Stone Wt"]];
+      let rows = [];
+      for (let i = 0; i < designDataArr.length; i++) {
+        let grossWt = parseFloat(designDataArr[i].grossWt).toFixed(3)
+        let stoneWt = parseFloat(designDataArr[i].stoneWt).toFixed(3)
+        let beadWt = parseFloat(designDataArr[i].beadWt).toFixed(3)
+        let extraStoneWt = parseFloat(designDataArr[i].extraStoneWt).toFixed(3)
+        let category = designDataArr[i].category.categoryName
+        let designNumber = designDataArr[i].designNumber
+        let temp = [(i + 1), designNumber, category, grossWt, stoneWt, beadWt, extraStoneWt];
+        rows.push(temp);
+      }
+      doc.autoTable({
+        head: columns,
+        body: rows,
+        bodyStyles: { minCellHeight: 5, fontSize: 8, lineColor: [0, 0, 0] },
+        headStyles: {
+          lineColor: [0, 0, 0],
+          fillColor: [192, 192, 192],
+          textColor: 0,
+          fontSize: 8,
+          fontStyle: 'bold',
+          lineWidth: 0.2
+        },
+        startY: y,
+        columnStyles: {
+          0: { cellWidth: 10 },
+          1: { "overflow": "linebreak" },
+          2: { "overflow": "linebreak" },
+          3: { "overflow": "linebreak" },
+          4: { "overflow": "linebreak" },
+          5: { "overflow": "linebreak" },
+        },
+        rowPageBreak: 'avoid',
+        theme: 'grid',
+        tableLineColor: [0, 0, 0],
+        didDrawCell: async (data) => {
+          if (data.column.index === 1 && data.cell.section === 'body') {
+          }
+        }
+      });
+      finalY = doc.previousAutoTable.finalY + 15; // The y position on the page
+
+      for (let i = 0; i < designDataArr.length; i++) {
+        let imageName = designDataArr[i].imageName
+
+        let imagePath = path.join(process.cwd(), '/images/' + imageName)
+        if (!fs.existsSync(imagePath)) {
+          imagePath = path.join(process.cwd(), '/images/' + 'noimage.png')
+        }
+
+        let dataFile = fs.readFileSync(imagePath, { encoding: 'base64' })
+
+        doc.addImage(dataFile, "JPEG", pageWidth / 6, finalY, 150, 100)
+        finalY = finalY * 5
+        console.log(finalY)
+        if (finalY > 296 && i < designDataArr.length - 1) {
+          doc.addPage()
+          finalY = 30
+        }
+      }
+
+      let fileName = Date.now() + '.pdf'
+      let dir = path.join(process.cwd(), '/pdf')
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, 0777);
+      }
+      assetspath = path.join(process.cwd(), "/pdf/" + fileName)
+
+      fs.appendFileSync(assetspath, new Buffer.from(doc.output('arraybuffer')));
+      res.sendFile(assetspath, fileName)
+
+      if (fs.existsSync(assetspath)) {
+        setTimeout(() => {
+          fs.unlinkSync(assetspath, () => {
+            console.log('File Deleted')
+          })
+        }, 1000)
+      }
+    } catch (error) {
+      logging.info('DesignController :: saveDesignsPDF', error)
+      return next(error)
+    } finally {
+      delete global.window;
+      delete global.navigator;
+      delete global.btoa;
+    }
+  },
 }

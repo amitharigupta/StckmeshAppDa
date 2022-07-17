@@ -21,4 +21,6 @@ router.post('/print/barcode', schemaValidator(validation.printDesigns), DesignCo
 
 router.post('/generatePDF', DesignController.generatePDF)
 
+router.post('/savedesignpdf', DesignController.saveDesignsPDF)
+
 module.exports = router

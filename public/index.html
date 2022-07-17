@@ -102,7 +102,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Gross Weight</th>
                         <td style="width: 18%;">
                           <input id="grossWt"
-                            onchange="validateForm('updateDesignModal','grossWt'); fnCalculate();" type="text"
+                            onchange="validateForm('updateDesignModal','grossWt'); fnCalculate(); calcSeventyPercentWeight('#updateDesignModal')" type="text"
                             class="form-control bg-light border-0 small gross" placeholder="Enter Gross Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="grossWt_error" class="error-message"></div>
@@ -323,7 +323,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Gross Weight</th>
                         <td style="width: 18%;">
                           <input id="grossWt"
-                            onchange="validateForm('addDesignModal','grossWt'); fnCalculate();" type="text"
+                            onchange="validateForm('addDesignModal','grossWt'); fnCalculate(); calcSeventyPercentWeight('#addDesignModal')" type="text"
                             class="form-control bg-light border-0 small gross" placeholder="Enter Gross Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="grossWt_error" class="error-message"></div>
@@ -502,6 +502,11 @@
                            data-toggle="printmodal" data-target="#printmodal">
                           <i class="fa fa-print" aria-hidden="true"></i>
                         </a> -->
+                        <button id="generatePDF"" href="#" class="btn btn-primary btn-circle btn-sm"
+                          title="PDF">
+                          <i class="fa fa-print" aria-hidden="true"></i>
+                        </button>
+                        <label class="head-label">PDF</label>
                         <button onclick="printDesignsModal()" href="#" class="btn btn-primary btn-circle btn-sm"
                           title="Print Design">
                           <i class="fa fa-print" aria-hidden="true"></i>
@@ -522,7 +527,8 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                           <thead class="table-head">
                             <tr>
-                              <th class="dt-heading"></th>
+                              <th class="dt-heading"><input type="checkbox" name="selectAll" id="select-all"
+                                style="width: 1em;height: 1em;margin-top: 7px;" /></th>
                               <th class="dt-heading">Sr No</th>
                               <th class="dt-heading">Design Number</th>
                               <th class="dt-heading">Image</th>
