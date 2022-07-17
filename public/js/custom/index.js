@@ -162,7 +162,7 @@ function calcSeventyPercentWeight(modal) {
 
     let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
     let netWt = grossWt - seventyPercentStoneWt
-    $(modal + ' #netWt').val(netWt)
+    $(modal + ' #netWt').val(netWt.toFixed(3))
     return seventyPercentStoneWt
 }
 
@@ -255,6 +255,7 @@ async function getCategorys() {
                 $.each(categorys.rows, function (key, value) {
                     $('#addDesignModal #categoryId').append($("<option></option>").attr("value", value.id).text(value.categoryName));
                     $('#updateDesignModal #categoryId').append($("<option></option>").attr("value", value.id).text(value.categoryName));
+                    $('#DateTableDesignList #categoryId').append($("<option></option>").attr("value", value.id).text(value.categoryName));
                 })
             }
             else {
@@ -299,6 +300,7 @@ async function setDataTable() {
                 }
             },
             {
+                "width": "10%",
                 "data": "designNumber",
             },
             {
@@ -325,6 +327,9 @@ async function setDataTable() {
             },
             {
                 "data": "code",
+            },
+            {
+                "data": "itemStatus",
             },
             {
                 "orderable": false,
@@ -952,8 +957,8 @@ function getFormattedTime() {
     var mi = today.getMinutes();
     var s = today.getSeconds();
     return d + "-" + m + "-" + y + "-" + h + "-" + mi + "-" + s;
-  }
-  
+}
+
 
 async function getPDFDesigns(IDs) {
     try {
@@ -979,3 +984,58 @@ async function getPDFDesigns(IDs) {
         document.getElementById('select-all').checked = false;
     }
 }
+
+
+// Filter record by size and weight range
+$('#filterData').on('click', async function () {
+    try {
+        let itemStatusSelect = $('#DateTableDesignList #itemStatusSelect option:selected').val()
+        let categorySelect = $('#DateTableDesignList #categoryId option:selected').val()
+        let url = 'filtergrwtitemstatus'
+        let body = { categoryId: categorySelect, itemStatus: itemStatusSelect }
+        if ($('#fromGrwt').val() != '' || $('#toGrwt').val() != '') {
+            let fromGrwt = parseFloat($('#fromGrwt').val()).toFixed(3)
+            let toGrwt = parseFloat($('#toGrwt').val()).toFixed(3)
+
+            if ((isNaN(fromGrwt) && isNaN(toGrwt)) || (fromGrwt > toGrwt)) {
+                toastr.error('Please enter valid range');
+                return
+            }
+            fromGrwt = isNaN(fromGrwt) ? undefined : fromGrwt
+            toGrwt = isNaN(toGrwt) ? undefined : toGrwt
+
+            body = { ...body, fromGrwt: fromGrwt, toGrwt: toGrwt };
+        }
+
+        let response = await fetch(api_endpoint + 'design/' + url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        let res = await response.json()
+        if (res.status) {
+            designs = res.data
+        } else {
+            designs = []
+        }
+        var table = $('#dataTable').DataTable()
+        table.clear()
+        table.rows.add(designs)
+        table.draw(false)
+
+    } catch (error) {
+        console.log(error);
+    } finally {
+        $('#FilterDesignModal').modal('hide');
+        $('.loading').hide();
+        $('#fromGrwt').val('');
+        $('#toGrwt').val('');
+        $('#fromdiamondwt').val('');
+        $('#todiamondwt').val('');
+        $('#fromSize').val('');
+        $('#toSize').val('');
+        $('#FilterDesignModal #itemId').val('');
+        $('#FilterDesignModal #itemStatusSelectFilter').val('');
+    }
+})

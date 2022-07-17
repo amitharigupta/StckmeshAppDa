@@ -104,4 +104,12 @@ module.exports = {
             return Promise.reject(err)
         }
     },
+    getDesignsByGrWt: async (payload) => {
+        try {
+            let designs = await Design.findAll({ 'where': payload })
+            return designs
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
 }

@@ -475,4 +475,40 @@ module.exports = {
       delete global.btoa;
     }
   },
+
+  filterGRWTItemStatus: async (req, res, next) => {
+    try {
+      const { fromGrwt, toGrwt, categoryId, itemStatus } = req.body
+
+      let query = {}
+
+      if (categoryId != "" && categoryId != undefined) {
+        query = { ...query, categoryId: categoryId }
+      }
+      if (itemStatus != "") {
+        query = { ...query, itemStatus: itemStatus }
+      }
+
+      // For From Gross Weight to To Gross Weight
+      if(fromGrwt != undefined) {
+        query = { ...query, grossWt: { [Op.and]: { [Op.gte]: fromGrwt } } }
+      }
+      if(toGrwt != undefined) {
+        query = { ...query, grossWt: { [Op.and]: { [Op.lte]: toGrwt } } }
+      }
+      if (fromGrwt != undefined && toGrwt != undefined) {
+        query = { ...query, grossWt: { [Op.and]: { [Op.gte]: fromGrwt, [Op.lte]: toGrwt } } }
+      }
+
+      let designDataArr = await DesignModel.getDesignsByGrWt(query)
+
+      if (designDataArr.length > 0) {
+        return res.status(200).json(responseUtils.success(designDataArr, 'Designs found'))
+      } else {
+        return res.status(200).json(responseUtils.message(false, 'No Designs found'))
+      }
+    } catch (error) {
+      return next(error)
+    }
+  }
 }

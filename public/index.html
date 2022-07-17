@@ -110,7 +110,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Stone Weight</th>
                         <td style="width: 18%;">
                           <input id="stoneWt"
-                            onchange="validateForm('updateDesignModal','stoneWt'); fnCalculate(); calcSeventyPercentWeight();" type="text"
+                            onchange="validateForm('updateDesignModal','stoneWt'); fnCalculate(); calcSeventyPercentWeight('#updateDesignModal');" type="text"
                             class="form-control bg-light border-0 small stone" placeholder="Enter Stone Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="stoneWt_error" class="error-message"></div>
@@ -129,7 +129,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Beads Weight</th>
                         <td style="width: 18%;">
                           <input id="beadWt"
-                            onchange="validateForm('updateDesignModal','beadWt'); fnCalculate(); calcSeventyPercentWeight();" type="text"
+                            onchange="validateForm('updateDesignModal','beadWt'); fnCalculate(); calcSeventyPercentWeight('#updateDesignModal');" type="text"
                             class="form-control bg-light border-0 small gross" placeholder="Enter beads Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="beadWt_error" class="error-message"></div>
@@ -137,7 +137,7 @@
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Extra Stone Weight</th>
                         <td style="width: 18%;">
                           <input id="extraStoneWt"
-                            onchange="validateForm('updateDesignModal','extraStoneWt'); fnCalculate(); calcSeventyPercentWeight();" type="text"
+                            onchange="validateForm('updateDesignModal','extraStoneWt'); fnCalculate(); calcSeventyPercentWeight('#updateDesignModal');" type="text"
                             class="form-control bg-light border-0 small stone" placeholder="Enter Extra Stone Weight"
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="extraStoneWt_error" class="error-message"></div>
@@ -524,6 +524,59 @@
                     <!-- Card Body -->
                     <div class="card-body">
                       <div class="table-responsive">
+                        <div class="text-center">
+                          <table id="DateTableDesignList">
+                            <tbody>
+                              <tr>
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>
+                                      <select id="itemStatusSelect" class="form-control btn-sm">
+                                        <option value="NOT IN STOCK">NOT IN STOCK</option>
+                                        <option value="INSTOCK">IN STOCK</option>
+                                        <option value="SALESOUT">SALESOUT</option>
+                                        <option value="SOLD">SOLD</option>
+                                      </select>
+                                    </td>
+                                  </div>
+                                  <div class="col-lg-12">
+                                    <td></td>
+                                    <td>&nbsp;&nbsp;From&nbsp;</td>
+                                    <td><input type="text" class="form-control btn-sm" id="fromGrwt" name="fromGrwt"
+                                        onchange="validateDate()"></td>
+                                  </div>
+                                  <div class="col-lg-12">
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td>To&nbsp;</td>
+                                    <td><input type="text" class="form-control btn-sm" id="toGrwt" name="toGrwt"
+                                        onchange="validateDate()"></td>
+                                  </div>
+                                  <div class="col-lg-12">
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td></td>
+                                    <td>
+                                      <select id="categoryId" class="form-control btn-sm">
+                                        <option selected value="">All Items</option>
+                                      </select>
+                                    </td>
+                                  </div>
+                                  <div class="col-lg-12">
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td></td>
+                                    <td>
+                                      <button href="#" class="btn btn-primary btn-circle btn-sm" title="Filter"
+                                        id="filterData">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                    </td>
+                                  </div>
+                                </div>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                           <thead class="table-head">
                             <tr>
@@ -536,6 +589,7 @@
                               <th class="dt-heading">Gross Wt</th>
                               <th class="dt-heading">Purity</th>
                               <th class="dt-heading">Code</th>
+                              <th class="dt-heading">Status</th>
                               <th class="dt-heading"></th>
                             </tr>
                           </thead>

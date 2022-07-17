@@ -23,4 +23,6 @@ router.post('/generatePDF', DesignController.generatePDF)
 
 router.post('/savedesignpdf', DesignController.saveDesignsPDF)
 
+router.post('/filtergrwtitemstatus', DesignController.filterGRWTItemStatus)
+
 module.exports = router
