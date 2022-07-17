@@ -180,3 +180,22 @@ img:hover{
   border-top-left-radius: 0rem !important;
   border-top-right-radius: 0rem !important;
 }
+
+#DateTableDesignList {
+  text-align: center;
+  margin: auto;
+  float: right;
+}
+
+#fromGrwt, #toGrwt {
+  height: 30px;
+  background-color: rgb(248,249,252);
+  border-width: 2px;
+  width: 141px;  
+}
+
+#itemStatusSelect { 
+  height: 30px;
+  background-color: rgb(248,249,252);
+  border-width: 2px;
+}
