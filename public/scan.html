@@ -100,7 +100,7 @@
                 <input type="text" class="form-control" placeholder="Enter SKU Number" id="designNo"
                   onchange="addDesignByNumber()" />
               </div>
-              <div class="col-md-4 text-center">
+              <!-- <div class="col-md-4 text-center">
                 <div class="row">
                   <div class="col-lg-6">
                     <select class="form-control btn-sm" id="pdfTemplate">
@@ -110,48 +110,32 @@
                       <option value="3">Template 3</option>
                     </select>
                   </div>
-                  <div class="col-lg-6">
-                    <button class="btn btn-secondary btn-sm" id="printPDF">Save PDF</button>
-                  </div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="card-body">
               <div class="row pb-1">
                 <div class="col-md-2">
-                  <input type="date" class="form-control btn-sm" id="transDate" name="transDate"
-                    style="width: 75% !important" />
+                  <input type="date" class="form-control btn-sm" id="transDate" name="transDate" style="width: 75% !important" />
                 </div>
                 <div class="col-md-1">
-                  <select class="form-control btn-sm" id="transSubType">
-                    <option value="Issue">Issue</option>
-                    <option value="Return">Return</option>
+                  <select class="form-control btn-sm" id="itemStatus">
                     <option value="Approval">Approval</option>
+                    <option value="Sold">Sold</option>
                   </select>
                 </div>
                 <div class="col-md-1">
-                  <select class="form-control btn-sm" id="upCustSalesType" onchange="getAccountByType()">
-                    <option value="Customer">Customer</option>
-                    <option value="Salesman">Salesman</option>
-                  </select>
+                  <input type="text" id="percent" class="form-control btn-sm" value="70"  />
                 </div>
                 <div class="col-md-1">
-                  <input type="text" id="billNo" class="form-control btn-sm" placeholder="Bill No" />
-                </div>
-                <div class="col-md-2">
-                  <select id="cust_sales_name" class="form-control  btn-sm"></select>
+                  <input type="text" id="stonePrice" class="form-control btn-sm" value="400" />
                 </div>
                 <div class="col-md-1">
-                  <input type="text" id="transRemark" class="form-control btn-sm" placeholder="Enter Remark" style="width: 200%" />
+                  <input type="text" id="customerName" class="form-control btn-sm" placeholder="Customer Name" />
                 </div>
-                <!-- <div class="col-md-1" style="line-height: 2.5rem;">
-                  <input type="checkbox" id="deleteIssueDesign" />&nbsp;&nbsp;<label style="font-size:.875rem">Delete</label>
-                </div> -->
-                <div class="col-md-4">
-                  <!-- <button type="button" class="btn btn-secondary btn-sm"
-                    onclick="updateStatusSalesCustomer()">Submit</button> -->
-                  <!-- <button class="btn btn-secondary btn-sm" id="exportExcel">Excel Export</button> -->
-                  <!-- <button class="btn btn-secondary btn-sm" id="printPDF">Save PDF</button> -->
+                <div class="col-md-4 float-right">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="updateStatusSalesCustomer()">Submit</button>
+                  <button class="btn btn-secondary btn-sm" id="printPDF">Save PDF</button>
                   <button class="btn btn-secondary btn-sm" onclick="clearBarCodeForm()">Clear All</button>
                 </div>
               </div>
@@ -172,13 +156,10 @@
                           <th class="dt-heading">Design Number</th>
                           <th class="dt-heading">Category</th>
                           <th class="dt-heading">Gross Wt</th>
-                          <th class="dt-heading">Stone Wt</th>
-                          <th class="dt-heading">Beads Wt</th>
-                          <th class="dt-heading">Extra Stone Wt</th>
-                          <th class="dt-heading">Net Wt</th>
                           <th class="dt-heading">Code</th>
                           <th class="dt-heading">Color</th>
                           <th class="dt-heading">Purity</th>
+                          <th class="dt-heading">Date</th>
                           <th class="dt-heading"></th>
                         </tr>
                       </thead>
@@ -221,7 +202,7 @@
   <script src="vendor/datatables/pdfmake.min.js"></script>
   <script src="vendor/datatables/vfs_fonts.js"></script>
   <script src="vendor/datatables/jszip.min.js"></script>
-  <script src="js/moment.min.js"></script>
+  <script src="js/moment.js"></script>
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <!-- <script src="js/select2.min.js"></script> -->

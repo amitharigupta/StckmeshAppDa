@@ -21,6 +21,15 @@ module.exports = {
             return Promise.reject(err)
         }
     },
+    updateDesignByQuery: async (query, obj) => {
+        try {
+            let design = await Design.update(obj, { 'where': { 'designNumber': { [Op.in]: query } } });
+            return design[0]    // return update count
+        }
+        catch (err) {
+            return Promise.reject(err)
+        }
+    },
     deleteDesignById: async (id) => {
         try {
             let design = await Design.destroy({ 'where': { 'id': id } });
@@ -111,5 +120,14 @@ module.exports = {
         } catch (err) {
             return Promise.reject(err)
         }
-    }
+    },
+
+    deleteDesignByNumber: async (payload) => {
+        try {
+            let designs = await Design.destroy({ 'where': { 'designNumber': { [Op.in]: payload } } })
+            return designs
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    },
 }
