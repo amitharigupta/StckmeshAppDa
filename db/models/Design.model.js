@@ -35,7 +35,9 @@ var Design = sequelize.define('design',
         reserved6: { type: Sequelize.STRING, allowNull: true, default: null },
         reserved7: { type: Sequelize.STRING, allowNull: true, default: null },
         colourStoneWeight: { type: Sequelize.STRING, allowNull: true, default: null },
-        huid: { type: Sequelize.STRING, allowNull: true, default: null }
+        huid: { type: Sequelize.STRING, allowNull: true, default: null },
+        customerName: { type: Sequelize.STRING, allowNull: true, default: null },
+        transDate: { type: Sequelize.STRING, allowNull: true, default: null }
     },
     {
         freezeTableName: true, // Model tableName will be the same as the model name

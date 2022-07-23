@@ -13,6 +13,8 @@ router.get('/:id', DesignController.getDesign)
 
 router.post('/designno', DesignController.getDesignByNumber)
 
+router.post('/updatestatus', DesignController.updateDesignStatus)
+
 router.post('/designnobycategory', DesignController.getDesignNumberByCategory)
 
 router.get('/list/all', schemaValidator(validation.getAllDesigns), DesignController.getAllDesigns)

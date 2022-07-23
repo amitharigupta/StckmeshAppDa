@@ -1,6 +1,6 @@
 let date = new Date();
 let currDate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString().padStart(2, 0) + '-' + date.getDate().toString().padStart(2, 0);
-// document.getElementById('transDate').value = currDate
+document.getElementById('transDate').value = currDate
 let categorys = [];
 
 async function begin() {
@@ -72,6 +72,7 @@ async function addDesignByNumber() {
             let code = newDesign.code === null ? '' : newDesign.code
             let color = newDesign.color === null ? '' : newDesign.color
             let purity = newDesign.purity === null ? '' : newDesign.purity
+            let designDate = moment((newDesign.createdAt).split('T')[0]).format('DD-MM-YYYY')
             var t = document.getElementById("designResultBody");
             var trs = t.getElementsByTagName("tr");
             var tds = null;
@@ -82,7 +83,7 @@ async function addDesignByNumber() {
             }
 
             if (designArr.indexOf(newDesign.designNumber) === -1) {
-              $('#designResult tbody').append('<tr> <td>' + rowCount + '</td> <td> <img src="' + images_endpoint + imageName + '" width="80px" height="80px" onerror="this.src=' + "'" + images_endpoint + "noimage.png" + "'" + '" /> </td> <td id="designCode">' + newDesign.designNumber + '</td> <td>' + categoryName + '</td> <td>' + grossWt + '</td> <td> ' + stoneWt + ' </td> <td> ' + beadWt + ' </td> <td> ' + extraStoneWt + ' </td> <td> ' + netWt + ' </td> <td> ' + code + ' </td> <td>' + color + '</td> <td>' + purity + '</td> <td>' + '<button type="button" class="btn btn-danger btn-sm btnDelete" data-toggle="tooltip"><i class="far fa-trash-alt" aria-hidden="true"></i></button> </td></tr>');
+              $('#designResult tbody').append('<tr> <td>' + rowCount + '</td> <td> <img src="' + images_endpoint + imageName + '" width="80px" height="80px" onerror="this.src=' + "'" + images_endpoint + "noimage.png" + "'" + '" /> </td> <td id="designCode">' + newDesign.designNumber + '</td> <td>' + categoryName + '</td> <td>' + grossWt + '</td> <td> ' + code + ' </td> <td>' + color + '</td> <td>' + purity + '</td> <td>' + designDate + '</td> <td>' + '<button type="button" class="btn btn-danger btn-sm btnDelete" data-toggle="tooltip"><i class="far fa-trash-alt" aria-hidden="true"></i></button> </td></tr>');
             }
           }
         } else {
@@ -133,9 +134,9 @@ $(document).ready(function () {
     let body = { designList: designArr, transSubType, cust_sales_name, transDate, upCustSalesType, billNo, templateVal, remark }
     let url = '';
     if (templateVal === 1) {
-      url = 'generatePDF1'
+      url = 'generatePDF'
     } else {
-      url = 'generatePDF2'
+      url = 'generatePDF'
     }
     cust_sales_name = cust_sales_name === "" ? "Design" : cust_sales_name
     fetch(api_endpoint + 'design/' + url, {
@@ -162,13 +163,6 @@ $(document).ready(function () {
   $("#designResultBody").on('click', '.btnDelete', function () {
     $(this).closest('tr').remove();
   });
-
-  // $('#cust_sales_name').select2({
-  //   placeholder: 'Select Customer/Salesman',
-  //   width: 'resolve',
-  //   allowClear: true,
-  //   maximumInputLength: 20
-  // });
 
 })
 
@@ -201,21 +195,13 @@ async function updateStatusSalesCustomer() {
   for (var i = 0; i < trs.length; i++) {
     tds = trs[i].getElementsByTagName("td")
     designArr.push(tds[2].textContent)
-    designDate.push(tds[13].textContent)
+    designDate.push(tds[8].textContent)
   }
-  let custSalesID = $('#cust_sales_name option:selected').val()
-  let custSalesName = $('#cust_sales_name option:selected').text()
-  if (custSalesID === "") { return toastr.error('Please select customer/salesman') }
+  let customerName = $('#customerName').val() === null || $('#customerName').val() === '' ? "" : $('#customerName').val()
   let transDate = $('#transDate').val()
-  let transRemark = $('#transRemark').val()
-  let transSubType = $('option:selected', '#transSubType').val()
-  let custSalesType = $('option:selected', '#upCustSalesType').val()
-  body = { designList: designArr, custSalesName, transSubType, custSalesType, transDate, custSalesID, transRemark }
-  if (transSubType === 'Issue') {
-    let billNo = $('#billNo').val()
-    let hideFlag = $('#deleteIssueDesign').is(":checked")
-    body = { ...body, billNo, hideFlag }
-  }
+  let itemStatus = $('option:selected', '#itemStatus').val()
+  body = { designList: designArr, customerName, itemStatus, transDate }
+  console.log(body)
   let reportDate = new Date(transDate)
   let isValid = false
   let errorArr = []
@@ -252,9 +238,13 @@ async function updateStatusSalesCustomer() {
           if (designList.length > 0) {
             $("#designResultBody").empty();
             for (let i = 0; i < designList.length; i++) {
+              let rowCount = $('#designResult').find('tr').length
+              let designDate = moment((designList[i].createdAt).split('T')[0]).format('DD-MM-YYYY')
               let imageName = designList[i].imageName === null ? images_endpoint + 'noimage.png' : designList[i].imageName;
-              $('#designResult tbody').append('<tr> <td>' + (i + 1) + '</td> <td> <img src="' + images_endpoint + imageName + '" width="80px" height="80px" onerror="this.src=' + "'" + images_endpoint + "noimage.png" + "'" + '" /> </td> <td id="designCode">' + designList[i].skuNumber + '</td> <td>' + designList[i].grossWeight + '</td> <td>' + designList[i].goldWeight + '</td> <td>' + designList[i].diamondWeight1 + '</td> <td>' + designList[i].diamondPcs1 + '</td> <td>' + designList[i].diamondWeight2 + '</td> <td>' + designList[i].diamondPcs2 + '</td> <td>' + designList[i].netWeight + '</td> <td>' + designList[i].metalPurity + '</td> <td>' + designList[i].size + '</td> <td>' + designList[i].lotNo + '</td> <td>' + designList[i].hDate + '</td> <td>' + '<button type="button" class="btn btn-danger btn-sm btnDelete" data-toggle="tooltip"><i class="far fa-trash-alt" aria-hidden="true"></i></button> </td></tr>')
+              $('#designResult tbody').append('<tr> <td>' + rowCount + '</td> <td> <img src="' + images_endpoint + imageName + '" width="80px" height="80px" onerror="this.src=' + "'" + images_endpoint + "noimage.png" + "'" + '" /> </td> <td id="designCode">' + designList[i].designNumber + '</td> <td>' + designList[i].category.categoryName + '</td> <td>' + designList[i].grossWt + '</td> <td> ' + designList[i].code + ' </td> <td>' + designList[i].color + '</td> <td>' + designList[i].purity + '</td> <td>' + designDate + '</td> <td>' + '<button type="button" class="btn btn-danger btn-sm btnDelete" data-toggle="tooltip"><i class="far fa-trash-alt" aria-hidden="true"></i></button> </td></tr>');
             }
+          } else {
+            $("#designResultBody").empty();
           }
         }
         else {

@@ -329,7 +329,7 @@ async function setDataTable() {
                 "data": "code",
             },
             {
-                "data": "itemStatus",
+                "data": "itemStatus"
             },
             {
                 "orderable": false,
@@ -341,6 +341,11 @@ async function setDataTable() {
                 }
             },
         ],
+        "fnRowCallback": function (nRow, aData) {
+            if (aData.itemStatus == "Approval") {
+                $('td', nRow).css('color', 'Red');
+            }
+        }
         // "order": [[1, 'asc']]
     });
 
