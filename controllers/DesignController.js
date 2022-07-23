@@ -177,7 +177,7 @@ module.exports = {
         return res.json(responseUtils.message(false, 'Printer is not connected'));
       }
       let printerTemplate = req.body.printerTemplate
-      let designs = await DesignModel.getDesigns({ 'id': { [Op.in]: req.body.designIds } })
+      let designs = await DesignModel.getDesignsWithCategory({ 'id': { [Op.in]: req.body.designIds } })
       if (designs.length > 0) {
         logging.info('reading printer_cmd file')
         let printCmds = await PrinterController.readPrintCmdFile(printerTemplate)
@@ -193,8 +193,10 @@ module.exports = {
         logging.info('Printing Designs, count - ' + designs.length)
 
         for (let i = 0; i < designs.length; i++) {
-          const design = designs[i];
+          let design = designs[i];
+          design.categoryName = designs[i].category.categoryName
           console.log('PRINTING ' + design.id)
+          console.log(`PRINTING ${JSON.stringify(design)}`)
           PrinterController.printfile(design, printCmds)
           console.log('DONE')
         }
