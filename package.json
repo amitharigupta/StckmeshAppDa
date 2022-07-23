@@ -25,7 +25,7 @@
     "joi": "^17.3.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "printer": "^0.4.0",
     "sequelize": "^6.3.5",

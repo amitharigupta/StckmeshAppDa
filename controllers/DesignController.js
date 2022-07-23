@@ -7,7 +7,8 @@ const path = require('path')
 const fs = require('fs');
 
 // For PDF require This library
-const { jsPDF } = require('jspdf/dist/jspdf.node.min')
+const { jsPDF } = require('jspdf/dist/jspdf.node.min');
+const moment = require('moment');
 require('jspdf-autotable')
 global.window = { document: { createElementNS: () => { return {} } } };
 global.navigator = {};
@@ -238,14 +239,16 @@ module.exports = {
   },
   generatePDF: async (req, res, next) => {
     try {
-      let { designList } = req.body
+      let { designList, percentage, customerName, transDate, itemStatus } = req.body
+      percentage = parseInt(percentage)
+      transDate = moment(transDate).format('DD-MM-YYYY')
       var doc = new jsPDF();
       let pageWidth = doc.internal.pageSize.getWidth();
       let pageHeight = doc.internal.pageSize.getHeight();
       let query = { "designNumber": designList }
       let designDataArr = await DesignModel.getDesignsWithCategory(query)
       let totalColumn = [['Gross Total', 'Stn Wt Total', 'Beads Total', 'Extra Stn Wt Total', 'Net Total', 'Stone Charges Total']]
-      let totalRow = []
+      let totalRow = [], rows = [];
       let totalGrossWt = totalStnWt = totalBeadWt = totalExtraStnWt = totalNetWt = totalStoneCharges = 0
 
       // sort array and then add same objects
@@ -253,71 +256,96 @@ module.exports = {
       let finalY = pageHeight * 0.03;
       doc.setFontSize(10);
       doc.text('ITEM LIST', pageWidth / 2, finalY, 'center');
-      let y = finalY + 15;
+      let y = finalY + 5;
+      doc.autoTable({
+        head: [['Date', transDate, 'Customer Name', customerName, 'Item Status', itemStatus ]],
+        bodyStyles: { minCellHeight: 5, fontSize: 8, lineColor: [0, 0, 0] },
+        headStyles: {
+          lineColor: [0, 0, 0],
+          fillColor: [192, 192, 192],
+          textColor: 0,
+          fontSize: 8,
+          fontStyle: 'bold',
+          lineWidth: 0.2,
+        },
+        startY: y + 5,
+        columnStyles: {
+          1: { fontStyle: 'bold', cellWidth : 32},
+          3: { fontStyle: 'bold', cellWidth : 32 },
+          5: { fontStyle: 'bold', cellWidth : 32 }
+        },
+        rowPageBreak: 'avoid',
+        theme: 'grid',
+        tableLineColor: [0, 0, 0],
+        didDrawCell: async (data) => {
+          if (data.column.index === 1 && data.cell.section === 'body') {
+          }
+        }
+      });
+
+      y = finalY + 10;
       for (let i = 0; i < designDataArr.length; i++) {
         let designNumber = designDataArr[i].designNumber
-        let imageName = designDataArr[i].imageName
-        let grossWt = (parseFloat(designDataArr[i].grossWt)).toFixed(3)
-        let stoneWt = (parseFloat(designDataArr[i].stoneWt)).toFixed(3)
-        let beadWt = (parseFloat(designDataArr[i].beadWt)).toFixed(3)
-        let netWt = (parseFloat(designDataArr[i].netWt)).toFixed(3)
-        let extraStoneWt = (parseFloat(designDataArr[i].extraStoneWt)).toFixed(3)
-        let imagePath = path.join(process.cwd(), '/images/' + imageName)
-        if (!fs.existsSync(imagePath)) {
-          imagePath = path.join(process.cwd(), '/images/' + 'noimage.png')
-        }
-        let dataFile = fs.readFileSync(imagePath, { encoding: 'base64' })
-
-        let columns = [["Sr", "Design No.", "Category", "Gross Wt", "Stone Wt", "Bead Wt", "Net Wt", "Purity"]];
-        let rows = [[(i + 1), designNumber, designDataArr[i].category.categoryName, grossWt, stoneWt, beadWt, netWt, designDataArr[i].purity]];
-
+        let grossWt = parseFloat(designDataArr[i].grossWt)
+        let stoneWt = parseFloat(designDataArr[i].stoneWt * percentage / 100)
+        let beadWt = parseFloat(designDataArr[i].beadWt  * percentage / 100)
+        let extraStoneWt = parseFloat(designDataArr[i].extraStoneWt * percentage / 100)
+        let netWt = parseFloat(grossWt - (stoneWt  + beadWt + extraStoneWt))
+        let stonePrice = (parseFloat(req.body.stonePrice)).toFixed(2)
+        let stnCharges = (parseFloat(stoneWt + beadWt + extraStoneWt) * stonePrice)
+        
         totalGrossWt += grossWt
         totalStnWt += stoneWt
         totalBeadWt += beadWt
         totalExtraStnWt += extraStoneWt
         totalNetWt += netWt
+        totalStoneCharges += stnCharges
 
-        doc.autoTable({
-          head: columns,
-          body: rows,
-          bodyStyles: { minCellHeight: 5, fontSize: 8, lineColor: [0, 0, 0] },
-          headStyles: {
-            lineColor: [0, 0, 0],
-            fillColor: [192, 192, 192],
-            textColor: 0,
-            fontSize: 8,
-            fontStyle: 'bold',
-            lineWidth: 0.2
-          },
-          startY: y + 80,
-          columnStyles: {
-            0: { cellWidth: 10 },
-            1: { "overflow": "linebreak" },
-            2: { "overflow": "linebreak" },
-            3: { "overflow": "linebreak" },
-            4: { "overflow": "linebreak" },
-            5: { "overflow": "linebreak" },
-          },
-          rowPageBreak: 'avoid',
-          theme: 'grid',
-          tableLineColor: [0, 0, 0],
-          didDrawCell: async (data) => {
-            if (data.column.index === 1 && data.cell.section === 'body') {
-              doc.addImage(dataFile, 'JPEG', (pageWidth / 2) - 35, y, 70, 70)
-              doc.text(`${designNumber}`, (pageWidth / 2), y + 75, 'center')
-            }
-          }
-        });
-        y += 120;
-        if (y >= pageHeight - 50 && i < designDataArr.length - 1) {
-          doc.addPage();
-          y = 20
-          finalY = 40
-        }
+        grossWt = parseFloat(grossWt).toFixed(3)
+        stoneWt = parseFloat(stoneWt).toFixed(3)
+        beadWt = parseFloat(beadWt).toFixed(3)
+        extraStoneWt = parseFloat(extraStoneWt).toFixed(3)
+        netWt = parseFloat(netWt).toFixed(3)
+        stnCharges = parseFloat(stnCharges).toFixed(2)
+
+        
+        let row = [(i + 1), designNumber, designDataArr[i].category.categoryName, grossWt, stoneWt, beadWt, extraStoneWt, netWt, stnCharges, designDataArr[i].purity];
+
+        rows.push(row)
       }
+      let columns = [["Sr", "Design No.", "Category", "Gross Wt", "Stone Wt", "Bead Wt", "Extra Stone Wt", "Net Wt", "Stone Charges", "Purity"]];
+      doc.autoTable({
+        head: columns,
+        body: rows,
+        bodyStyles: { minCellHeight: 5, fontSize: 8, lineColor: [0, 0, 0] },
+        headStyles: {
+          lineColor: [0, 0, 0],
+          fillColor: [192, 192, 192],
+          textColor: 0,
+          fontSize: 8,
+          fontStyle: 'bold',
+          lineWidth: 0.2
+        },
+        startY: y + 10,
+        columnStyles: {
+          0: { cellWidth: 10 },
+          1: { "overflow": "linebreak" },
+          2: { "overflow": "linebreak" },
+          3: { "overflow": "linebreak" },
+          4: { "overflow": "linebreak" },
+          5: { "overflow": "linebreak" },
+        },
+        rowPageBreak: 'avoid',
+        theme: 'grid',
+        tableLineColor: [0, 0, 0],
+        didDrawCell: async (data) => {
+          if (data.column.index === 1 && data.cell.section === 'body') {
+          }
+        }
+      });
       finalY = doc.previousAutoTable.finalY + 5;
 
-      totalRow = [[totalGrossWt, totalStnWt, totalBeadWt, totalExtraStnWt, totalNetWt]]
+      totalRow = [[totalGrossWt.toFixed(3), totalStnWt.toFixed(3), totalBeadWt.toFixed(3), totalExtraStnWt.toFixed(3), totalNetWt.toFixed(3), totalStoneCharges.toFixed(2)]]
       doc.autoTable({
         head: totalColumn,
         body: totalRow,
