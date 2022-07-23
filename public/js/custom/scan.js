@@ -122,23 +122,17 @@ $(document).ready(function () {
     let selectedDate = document.getElementById('transDate').value
     let transDate
     if (selectedDate === "") {
-      transDate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString().padStart(2, 0) + '-' + date.getDate().toString().padStart(2, 0);
+      transDate = date.getDate().toString().padStart(2, 0) + '-' +  (date.getMonth() + 1).toString().padStart(2, 0) + '-' + date.getFullYear().toString();
     } else {
       transDate = selectedDate
     }
-    let transSubType = $('select#transSubType option:selected').val();
-    let upCustSalesType = $('select#upCustSalesType option:selected').val();
-    let billNo = $('#billNo').val()
-    let templateVal = parseInt($('#pdfTemplate option:selected').val());
-    let remark = $('#transRemark').val();
-    let body = { designList: designArr, transSubType, cust_sales_name, transDate, upCustSalesType, billNo, templateVal, remark }
-    let url = '';
-    if (templateVal === 1) {
-      url = 'generatePDF'
-    } else {
-      url = 'generatePDF'
-    }
-    cust_sales_name = cust_sales_name === "" ? "Design" : cust_sales_name
+    let stonePrice = $('#stonePrice').val();
+    let customerName = $('#customerName').val();
+    let percentage = $('#percent').val();
+    let itemStatus = $('select#itemStatus option:selected').val();
+    let body = { designList: designArr, stonePrice, itemStatus, customerName, percentage, transDate }
+    let url = 'generatePDF'
+    cust_sales_name = customerName === "" ? "Design" : customerName
     fetch(api_endpoint + 'design/' + url, {
       method: 'POST',
       headers: {

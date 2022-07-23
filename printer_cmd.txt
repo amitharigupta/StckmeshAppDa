@@ -1,11 +1,12 @@
 Template1 Start
 "x": "200", "y": "40", "type": "128", "height": "40", "readable": "0", "rotation": "180", "narrow": "1", "wide": "2", "code": "${designNumber}"
 "quantity": "1", "copy": "1"
-QRCODE 80,13,H,3,A,0,M2,S7,\"${skuNumber}\"
-TEXT 250,10,\"0\",0,7,7,\"G Wt   : ${grossWeight}\"
-TEXT 250,29,\"0\",0,6,6,\"S Wt : ${stoneWeight}\"
-TEXT 250,48,\"0\",0,6,6,\"C Wt : ${centerStoneWeight}\"
-TEXT 250,67,\"0\",0,7,7,\"N Wt   : ${netWeight}\"
+QRCODE 80,13,H,3,A,0,M2,S7,\"${designNumber}\"
+TEXT 250,10,\"0\",0,7,7,\"G Wt   : ${grossWt}\"
+TEXT 250,29,\"0\",0,6,6,\"S Wt : ${stoneWt}\"
+TEXT 250,48,\"0\",0,6,6,\"C Wt : ${beadWt}\"
+TEXT 250,48,\"0\",0,6,6,\"C Wt : ${extraStoneWt}\"
+TEXT 250,67,\"0\",0,7,7,\"N Wt   : ${netWt}\"
 TEXT 65,13,\"0\",90,6,6,\"${designNumber}\"
 Template1 End
 
