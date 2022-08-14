@@ -555,5 +555,20 @@ module.exports = {
     } catch (error) {
       return next(error)
     }
-  }
+  },
+
+  deleteSelectedDesign: async (req, res, next) => {
+    try {
+      let { ids } = req.body
+      let deletedSelectedDesign = await DesignModel.deleteDesignByStatus(ids)
+      if (deletedSelectedDesign > 0) {
+        return res.json(responseUtils.success(true, 'Designs Deleted Successfully'))
+      } else {
+        return res.json(responseUtils.message(false, `Design is not deleted. Design is not instock.`))
+      }
+    } catch (error) {
+      logging.info('DesignController :: deleteSelectedDesign', error)
+      return next(error)
+    }
+  },
 }

@@ -548,6 +548,18 @@ async function addDesignByNumber() {
     }
 }
 
+// Reset Form after inserting
+async function resetFormFields() {
+    document.querySelector('#addDesignModal #designNumber').value = "";
+    document.querySelector('#addDesignModal #grossWt').value = "";
+    document.querySelector('#addDesignModal #stoneWt').value = "";
+    document.querySelector('#addDesignModal #beadWt').value = "";
+    document.querySelector('#addDesignModal #extraStoneWt').value = "";
+    document.querySelector('#addDesignModal #netWt').value = "";
+    document.querySelector('#addDesignModal #code').value = "";
+    document.querySelector('#addDesignModal #color').value = "";
+}
+
 async function addDesign() {
     try {
         let valid = true;
@@ -593,13 +605,14 @@ async function addDesign() {
                     table.draw(false);
                     toastr.success(data.message)
                     base64String = '';
+                    await resetFormFields()
                     $('#addDesignModal #imageName').val('')
                 }
                 else {
                     toastr.error(data.message)
                     return
                 }
-                $('#addDesignModal').modal('hide')
+                // $('#addDesignModal').modal('hide')
                 return newDesign;
             }
             else if (response.status == 401) {
@@ -611,15 +624,11 @@ async function addDesign() {
             else {
                 toastr.error('Something went wrong')
             }
-            // $('#addDesignModal').modal('hide')
         }
     }
     catch (err) {
         console.log(err)
         toastr.error('Something went wrong')
-    }
-    finally {
-        // $('#addDesignModal').modal('hide')
     }
 }
 
@@ -753,8 +762,7 @@ async function validateForm(form, field = null, validate = true) {
                     element.classList.add('border-invalid');
                     element.classList.remove('border-0')
                     let errorMessage = validation.message
-                    document.querySelector('#' + form + ' #' + field + '_error')
-                        .innerHTML = errorMessage
+                    document.querySelector('#' + form + ' #' + field + '_error').innerHTML = errorMessage
                     // console.log(errorMessage)
                     return false
 
@@ -1044,3 +1052,57 @@ $('#filterData').on('click', async function () {
         $('#FilterDesignModal #itemStatusSelectFilter').val('');
     }
 })
+
+
+async function deleteDesigns(IDs) {
+    try {
+      let ids = IDs
+      let response = await fetch(api_endpoint + 'design/deleteselecteddesign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ids: ids })
+      })
+      let data = await response.json()
+      if (response.status == 200) {
+        if (data.status) {
+          await getDesigns()
+          toastr.success(data.message)
+        }
+        else {
+          toastr.error(data.message)
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      document.getElementById('select-all').checked = false;
+      $('.loading').hide()
+    }
+  }
+  
+  $('#DeleteAll').on('click', function () {
+    try {
+      $('.loading').show();
+      const checkboxes = document.querySelectorAll('input[name="designSelect"]:checked');
+      let Ids = []
+      if (checkboxes.length == 0) {
+        toastr.error('No Design Selected')
+      }
+      else {
+        checkboxes.forEach(checkbox => {
+          Ids.push(checkbox.id.split('_')[1])
+        })
+  
+        if (Ids.length > 0) {
+          deleteDesigns(Ids)
+        }
+      }
+    } catch (error) {
+      toastr.error('Something went wrong')
+    } finally {
+      $('.loading').hide()
+    }
+  });
+  

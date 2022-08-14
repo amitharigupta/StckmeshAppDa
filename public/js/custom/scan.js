@@ -282,7 +282,7 @@ async function getAccountByType() {
     }
   }
 }
-getAccountByType()
+// getAccountByType()
 
 $('#upCustSalesType').change(function () {
   getAccountByType()
