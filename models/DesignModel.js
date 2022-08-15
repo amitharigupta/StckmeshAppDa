@@ -130,4 +130,14 @@ module.exports = {
             return Promise.reject(err)
         }
     },
+
+    deleteDesignByStatus: async (id) => {
+        try {
+            let design = await Design.destroy({ 'where': { 'id': id, 'itemStatus': 'INSTOCK' } });
+            return design
+        }
+        catch (err) {
+            return Promise.reject(err)
+        }
+    },
 }

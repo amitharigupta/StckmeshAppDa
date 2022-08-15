@@ -13,6 +13,8 @@ router.get('/:id', DesignController.getDesign)
 
 router.post('/designno', DesignController.getDesignByNumber)
 
+router.post('/deleteselecteddesign', DesignController.deleteSelectedDesign)
+
 router.post('/updatestatus', DesignController.updateDesignStatus)
 
 router.post('/designnobycategory', DesignController.getDesignNumberByCategory)

@@ -167,7 +167,7 @@ module.exports = {
       for (let i = 0; i < systemPrinters.length; i++) {
         const systemPrinter = systemPrinters[i];
         console.log(systemPrinter.name)
-        if (systemPrinter.name === 'TSC TTP-244 Pro') {
+        if ((systemPrinter.name).includes('TSC')) {
           isPrinterOnline = true;
           break;
         }
@@ -555,5 +555,20 @@ module.exports = {
     } catch (error) {
       return next(error)
     }
-  }
+  },
+
+  deleteSelectedDesign: async (req, res, next) => {
+    try {
+      let { ids } = req.body
+      let deletedSelectedDesign = await DesignModel.deleteDesignByStatus(ids)
+      if (deletedSelectedDesign > 0) {
+        return res.json(responseUtils.success(true, 'Designs Deleted Successfully'))
+      } else {
+        return res.json(responseUtils.message(false, `Design is not deleted. Design is not instock.`))
+      }
+    } catch (error) {
+      logging.info('DesignController :: deleteSelectedDesign', error)
+      return next(error)
+    }
+  },
 }
