@@ -1069,6 +1069,10 @@ async function deleteDesigns(IDs) {
         if (response.status == 200) {
             if (data.status) {
                 await getDesigns()
+                var table = $('#dataTable').DataTable()
+                table.clear();
+                table.rows.add(designs.rows);
+                table.draw(false);
                 toastr.success(data.message)
             }
             else {
@@ -1107,9 +1111,9 @@ $('#DeleteAll').on('click', function () {
     }
 });
 
-function round(value, precision) {
-    var multiplier = Math.pow(10, precision || 0);
-    return Math.round(value * multiplier) / multiplier;
-}
+// function round(value, precision) {
+//     var multiplier = Math.pow(10, precision || 0);
+//     return Math.round(value * multiplier) / multiplier;
+// }
 
-console.log(round(12345.6789, 3)) 
+// console.log(round(12345.6789, 3)) 
