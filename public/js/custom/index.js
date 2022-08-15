@@ -162,7 +162,7 @@ function calcSeventyPercentWeight(modal) {
 
     let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
     let netWt = grossWt - seventyPercentStoneWt
-    $(modal + ' #netWt').val(netWt.toFixed(3))
+    $(modal + ' #netWt').val(netWt.toFixed(2))
     return seventyPercentStoneWt
 }
 
@@ -956,7 +956,7 @@ $('#generatePDF').on('click', function () {
     } catch (error) {
         toastr.error('Something went wrong')
     } finally {
-        $('.loading').hide()
+        // $('.loading').hide()
     }
 });
 
@@ -1083,13 +1083,13 @@ async function deleteDesigns(IDs) {
         console.error(error)
     } finally {
         document.getElementById('select-all').checked = false;
-        $('.loading').hide()
+        // $('.loading').hide()
     }
 }
 
 $('#DeleteAll').on('click', function () {
     try {
-        $('.loading').show();
+        // $('.loading').show();
         const checkboxes = document.querySelectorAll('input[name="designSelect"]:checked');
         let Ids = []
         if (checkboxes.length == 0) {
@@ -1107,7 +1107,7 @@ $('#DeleteAll').on('click', function () {
     } catch (error) {
         toastr.error('Something went wrong')
     } finally {
-        $('.loading').hide()
+        // $('.loading').hide()
     }
 });
 
@@ -1117,3 +1117,13 @@ $('#DeleteAll').on('click', function () {
 // }
 
 // console.log(round(12345.6789, 3)) 
+
+
+function round(value, step) {
+    step || (step = 1.0);
+    var inv = 1.0 / step;
+    return Math.round(value * inv) / inv;
+}
+
+let valueRound = round(0.497, 0.5)
+console.log(valueRound.toFixed(2))
