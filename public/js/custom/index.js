@@ -606,6 +606,7 @@ async function addDesign() {
                     toastr.success(data.message)
                     base64String = '';
                     await resetFormFields()
+                    await getDesignNumberByCategory('#addDesignModal', body.categoryId)
                     $('#addDesignModal #imageName').val('')
                 }
                 else {
@@ -1056,53 +1057,59 @@ $('#filterData').on('click', async function () {
 
 async function deleteDesigns(IDs) {
     try {
-      let ids = IDs
-      let response = await fetch(api_endpoint + 'design/deleteselecteddesign', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ids: ids })
-      })
-      let data = await response.json()
-      if (response.status == 200) {
-        if (data.status) {
-          await getDesigns()
-          toastr.success(data.message)
+        let ids = IDs
+        let response = await fetch(api_endpoint + 'design/deleteselecteddesign', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ids: ids })
+        })
+        let data = await response.json()
+        if (response.status == 200) {
+            if (data.status) {
+                await getDesigns()
+                toastr.success(data.message)
+            }
+            else {
+                toastr.error(data.message)
+            }
+        }
+    } catch (error) {
+        console.error(error)
+    } finally {
+        document.getElementById('select-all').checked = false;
+        $('.loading').hide()
+    }
+}
+
+$('#DeleteAll').on('click', function () {
+    try {
+        $('.loading').show();
+        const checkboxes = document.querySelectorAll('input[name="designSelect"]:checked');
+        let Ids = []
+        if (checkboxes.length == 0) {
+            toastr.error('No Design Selected')
         }
         else {
-          toastr.error(data.message)
+            checkboxes.forEach(checkbox => {
+                Ids.push(checkbox.id.split('_')[1])
+            })
+
+            if (Ids.length > 0) {
+                deleteDesigns(Ids)
+            }
         }
-      }
     } catch (error) {
-      console.error(error)
+        toastr.error('Something went wrong')
     } finally {
-      document.getElementById('select-all').checked = false;
-      $('.loading').hide()
+        $('.loading').hide()
     }
-  }
-  
-  $('#DeleteAll').on('click', function () {
-    try {
-      $('.loading').show();
-      const checkboxes = document.querySelectorAll('input[name="designSelect"]:checked');
-      let Ids = []
-      if (checkboxes.length == 0) {
-        toastr.error('No Design Selected')
-      }
-      else {
-        checkboxes.forEach(checkbox => {
-          Ids.push(checkbox.id.split('_')[1])
-        })
-  
-        if (Ids.length > 0) {
-          deleteDesigns(Ids)
-        }
-      }
-    } catch (error) {
-      toastr.error('Something went wrong')
-    } finally {
-      $('.loading').hide()
-    }
-  });
-  
+});
+
+function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+}
+
+console.log(round(12345.6789, 3)) 

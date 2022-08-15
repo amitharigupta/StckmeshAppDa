@@ -167,7 +167,7 @@ module.exports = {
       for (let i = 0; i < systemPrinters.length; i++) {
         const systemPrinter = systemPrinters[i];
         console.log(systemPrinter.name)
-        if (systemPrinter.name === 'TSC TTP-244 Pro') {
+        if ((systemPrinter.name).includes('TSC')) {
           isPrinterOnline = true;
           break;
         }

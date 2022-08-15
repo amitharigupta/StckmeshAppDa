@@ -47,6 +47,7 @@ async function getCategorys() {
 async function addDesignByNumber() {
   try {
     let skuNumber = document.getElementById('designNo').value
+    skuNumber = skuNumber.split(' ')[0];
     let designArr = []
     if (skuNumber) {
       let response = await fetch(api_endpoint + 'design/designno', {
