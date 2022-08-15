@@ -1008,8 +1008,8 @@ $('#filterData').on('click', async function () {
         let url = 'filtergrwtitemstatus'
         let body = { categoryId: categorySelect, itemStatus: itemStatusSelect }
         if ($('#fromGrwt').val() != '' || $('#toGrwt').val() != '') {
-            let fromGrwt = parseFloat($('#fromGrwt').val()).toFixed(3)
-            let toGrwt = parseFloat($('#toGrwt').val()).toFixed(3)
+            let fromGrwt = parseFloat($('#fromGrwt').val())
+            let toGrwt = parseFloat($('#toGrwt').val())
 
             if ((isNaN(fromGrwt) && isNaN(toGrwt)) || (fromGrwt > toGrwt)) {
                 toastr.error('Please enter valid range');
@@ -1110,14 +1110,6 @@ $('#DeleteAll').on('click', function () {
         // $('.loading').hide()
     }
 });
-
-// function round(value, precision) {
-//     var multiplier = Math.pow(10, precision || 0);
-//     return Math.round(value * multiplier) / multiplier;
-// }
-
-// console.log(round(12345.6789, 3)) 
-
 
 function round(value, step) {
     step || (step = 1.0);
