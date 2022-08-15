@@ -162,7 +162,7 @@ function calcSeventyPercentWeight(modal) {
 
     let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
     let netWt = grossWt - seventyPercentStoneWt
-    $(modal + ' #netWt').val(netWt.toFixed(3))
+    $(modal + ' #netWt').val(netWt.toFixed(2))
     return seventyPercentStoneWt
 }
 
@@ -956,7 +956,7 @@ $('#generatePDF').on('click', function () {
     } catch (error) {
         toastr.error('Something went wrong')
     } finally {
-        $('.loading').hide()
+        // $('.loading').hide()
     }
 });
 
@@ -1008,8 +1008,8 @@ $('#filterData').on('click', async function () {
         let url = 'filtergrwtitemstatus'
         let body = { categoryId: categorySelect, itemStatus: itemStatusSelect }
         if ($('#fromGrwt').val() != '' || $('#toGrwt').val() != '') {
-            let fromGrwt = parseFloat($('#fromGrwt').val()).toFixed(3)
-            let toGrwt = parseFloat($('#toGrwt').val()).toFixed(3)
+            let fromGrwt = parseFloat($('#fromGrwt').val())
+            let toGrwt = parseFloat($('#toGrwt').val())
 
             if ((isNaN(fromGrwt) && isNaN(toGrwt)) || (fromGrwt > toGrwt)) {
                 toastr.error('Please enter valid range');
@@ -1069,6 +1069,10 @@ async function deleteDesigns(IDs) {
         if (response.status == 200) {
             if (data.status) {
                 await getDesigns()
+                var table = $('#dataTable').DataTable()
+                table.clear();
+                table.rows.add(designs.rows);
+                table.draw(false);
                 toastr.success(data.message)
             }
             else {
@@ -1079,13 +1083,13 @@ async function deleteDesigns(IDs) {
         console.error(error)
     } finally {
         document.getElementById('select-all').checked = false;
-        $('.loading').hide()
+        // $('.loading').hide()
     }
 }
 
 $('#DeleteAll').on('click', function () {
     try {
-        $('.loading').show();
+        // $('.loading').show();
         const checkboxes = document.querySelectorAll('input[name="designSelect"]:checked');
         let Ids = []
         if (checkboxes.length == 0) {
@@ -1103,13 +1107,15 @@ $('#DeleteAll').on('click', function () {
     } catch (error) {
         toastr.error('Something went wrong')
     } finally {
-        $('.loading').hide()
+        // $('.loading').hide()
     }
 });
 
-function round(value, precision) {
-    var multiplier = Math.pow(10, precision || 0);
-    return Math.round(value * multiplier) / multiplier;
+function round(value, step) {
+    step || (step = 1.0);
+    var inv = 1.0 / step;
+    return Math.round(value * inv) / inv;
 }
 
-console.log(round(12345.6789, 3)) 
+let valueRound = round(0.497, 0.5)
+console.log(valueRound.toFixed(2))

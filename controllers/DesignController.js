@@ -35,6 +35,12 @@ function calcTotalStoneWt(stoneWt, beadWt, extraStoneWt) {
   return totalStoneWt.toFixed(3);
 }
 
+function roundValue(value, step) {
+  step || (step = 1.0);
+  var inv = 1.0 / step;
+  return Math.round(value * inv) / inv;
+}
+
 module.exports = {
   createDesign: async (req, res, next) => {
     try {
@@ -289,12 +295,12 @@ module.exports = {
       for (let i = 0; i < designDataArr.length; i++) {
         let designNumber = designDataArr[i].designNumber
         let grossWt = parseFloat(designDataArr[i].grossWt)
-        let stoneWt = parseFloat(designDataArr[i].stoneWt * percentage / 100)
+        let stoneWt = roundValue(parseFloat(designDataArr[i].stoneWt * percentage / 100), 0.5)
         let beadWt = parseFloat(designDataArr[i].beadWt  * percentage / 100)
         let extraStoneWt = parseFloat(designDataArr[i].extraStoneWt * percentage / 100)
         let netWt = parseFloat(grossWt - (stoneWt  + beadWt + extraStoneWt))
         let stonePrice = (parseFloat(req.body.stonePrice)).toFixed(2)
-        let stnCharges = (parseFloat(stoneWt + beadWt + extraStoneWt) * stonePrice)
+        let stnCharges = roundValue((parseFloat(stoneWt + beadWt + extraStoneWt) * stonePrice), 0.5)
         
         totalGrossWt += grossWt
         totalStnWt += stoneWt
