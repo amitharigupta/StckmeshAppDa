@@ -159,23 +159,49 @@
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="netWt_error" class="error-message divNet"></div>
                         </td>
-                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Code</th>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Stone Weight Code</th>
                         <td style="width: 18%;">
-                          <input id="code" onchange="validateForm('updateDesignModal','code')" type="text"
-                            class="form-control bg-light border-0 small" placeholder="Enter Code"
-                            aria-label="Search" aria-describedby="basic-addon2" required readonly>
-                          <div id="code_error" class="error-message"></div>
+                          <input id="stoneWtCode" onchange="validateForm('updateDesignModal','stoneWtCode')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Stone Weight Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="stoneWtCode_error" class="error-message"></div>
                         </td>
                      </tr>
                     </tbody>
                   </table>
 
                   <hr>
-
                   <table class="table borderless">
-                    <thead></thead>
                     <tbody>
                       <tr>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Beads Weight Code</th>
+                        <td style="width: 18%;">
+                          <input id="beadWtCode" onchange="validateForm('updateDesignModal','beadWtCode')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Beads Weight Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="beadWtCode_error" class="error-message"></div>
+                        </td>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Extra Stone Weight Code</th>
+                        <td style="width: 18%;">
+                          <input id="extraStoneWtCode" onchange="validateForm('updateDesignModal','extraStoneWtCode')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Extra Stone Weight Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="extraStoneWtCode_error" class="error-message"></div>
+                        </td>
+                     </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+                  <table class="table borderless">
+                    <tbody>
+                      <tr>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Code</th>
+                        <td style="width: 18%;">
+                          <input id="code" onchange="validateForm('updateDesignModal','code')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="code_error" class="error-message"></div>
+                        </td>
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Colour</th>
                         <td style="width: 18%;">
                           <input id="color" onchange="validateForm('updateDesignModal','color')" type="text"
@@ -183,6 +209,14 @@
                             aria-describedby="basic-addon2" required>
                           <div id="color_error" class="error-message"></div>
                         </td>
+                     </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+                  <table class="table borderless">
+                    <thead></thead>
+                    <tbody>
+                      <tr>
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Purity</th>
                         <td style="width: 18%;">
                           <input id="purity" onchange="validateForm('updateDesignModal','purity')" type="text"
@@ -190,21 +224,10 @@
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="purity_error" class="error-message"></div>
                         </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <hr>
-                  <table class="table borderless">
-                    <thead></thead>
-                    <tbody>
-                      <tr> 
                         <th style="width: 15%; color: #14274A;">Upload Image</th>
                         <td style="width: 18%;">
-                          <input type="file" id="imageName" accept="image/jpeg, image/png, image/jpg">
+                          <input type="file" id="imageName" class="form-control bg-light border-0 small" accept="image/jpeg, image/png, image/jpg">
                           <div id="imageName_error" class="error-message"></div>
-                        </td>
-                        <th style="width: 15%; color: #14274A;"></th>
-                        <td style="width: 15%;">
                         </td>
                       </tr>
                     </tbody>
@@ -370,7 +393,6 @@
                   <hr>
 
                   <table class="table borderless">
-                    <thead></thead>
                     <tbody>
                       <tr>
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Net Weight</th>
@@ -380,23 +402,49 @@
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="netWt_error" class="error-message divNet"></div>
                         </td>
-                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Code</th>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Stone Weight Code</th>
                         <td style="width: 18%;">
-                          <input id="code" onchange="validateForm('addDesignModal','code')" type="text"
-                            class="form-control bg-light border-0 small" placeholder="Enter Code"
-                            aria-label="Search" aria-describedby="basic-addon2" required readonly>
-                          <div id="code_error" class="error-message"></div>
+                          <input id="stoneWtCode" onchange="validateForm('addDesignModal','stoneWtCode')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Stone Weight Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="stoneWtCode_error" class="error-message"></div>
                         </td>
                      </tr>
                     </tbody>
                   </table>
 
                   <hr>
-
                   <table class="table borderless">
-                    <thead></thead>
                     <tbody>
                       <tr>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Beads Weight Code</th>
+                        <td style="width: 18%;">
+                          <input id="beadWtCode" onchange="validateForm('addDesignModal','beadWtCode')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Beads Weight Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="beadWtCode_error" class="error-message"></div>
+                        </td>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Extra Stone Weight Code</th>
+                        <td style="width: 18%;">
+                          <input id="extraStoneWtCode" onchange="validateForm('addDesignModal','extraStoneWtCode')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Extra Stone Weight Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="extraStoneWtCode_error" class="error-message"></div>
+                        </td>
+                     </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+                  <table class="table borderless">
+                    <tbody>
+                      <tr>
+                        <th style="width: 15%; line-height: 2.5; color: #14274A;">Code</th>
+                        <td style="width: 18%;">
+                          <input id="code" onchange="validateForm('addDesignModal','code')" type="text"
+                            class="form-control bg-light border-0 small" placeholder="Enter Code"
+                            aria-label="Search" aria-describedby="basic-addon2" required>
+                          <div id="code_error" class="error-message"></div>
+                        </td>
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Colour</th>
                         <td style="width: 18%;">
                           <input id="color" onchange="validateForm('addDesignModal','color')" type="text"
@@ -404,6 +452,14 @@
                             aria-describedby="basic-addon2" required>
                           <div id="color_error" class="error-message"></div>
                         </td>
+                     </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+                  <table class="table borderless">
+                    <thead></thead>
+                    <tbody>
+                      <tr>
                         <th style="width: 15%; line-height: 2.5; color: #14274A;">Purity</th>
                         <td style="width: 18%;">
                           <input id="purity" onchange="validateForm('addDesignModal','purity')" type="text"
@@ -411,28 +467,14 @@
                             aria-label="Search" aria-describedby="basic-addon2" required>
                           <div id="purity_error" class="error-message"></div>
                         </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <hr>
-
-                  <table class="table borderless">
-                    <thead></thead>
-                    <tbody>
-                      <tr> 
                         <th style="width: 15%; color: #14274A;">Upload Image</th>
                         <td style="width: 18%;">
                           <input type="file" id="imageName" class="form-control bg-light border-0 small" accept="image/jpeg, image/png, image/jpg">
                           <div id="imageName_error" class="error-message"></div>
                         </td>
-                        <th style="width: 15%; color: #14274A;"></th>
-                        <td style="width: 15%;">
-                        </td>
                       </tr>
                     </tbody>
                   </table>
-
                 </div>
               </div>
             </div>

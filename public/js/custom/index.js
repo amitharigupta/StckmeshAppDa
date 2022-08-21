@@ -72,6 +72,30 @@ let designFormFields = [
         ]
     },
     {
+        'displayName': 'Stone Weight Code',
+        'fieldName': 'stoneWtCode',
+        'validations': [
+            // { 'type': 'required', 'message': 'Colour is Required' },
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+        ]
+    },
+    {
+        'displayName': 'Beads Weight Code',
+        'fieldName': 'beadWtCode',
+        'validations': [
+            // { 'type': 'required', 'message': 'Colour is Required' },
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+        ]
+    },
+    {
+        'displayName': 'Extra Stone Weight Code',
+        'fieldName': 'extraStoneWtCode',
+        'validations': [
+            // { 'type': 'required', 'message': 'Colour is Required' },
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+        ]
+    },
+    {
         'displayName': 'Colour',
         'fieldName': 'color',
         'validations': [
@@ -155,11 +179,28 @@ function calcSeventyPercentWeight(modal) {
     let stoneWt = isNaN(parseFloat($(modal + ' #stoneWt').val())) ? 0 : parseFloat($(modal + ' #stoneWt').val())
     let beadWt = isNaN(parseFloat($(modal + ' #beadWt').val())) ? 0 : parseFloat($(modal + ' #beadWt').val())
     let extraStoneWt = isNaN(parseFloat($(modal + ' #extraStoneWt').val())) ? 0 : parseFloat($(modal + ' #extraStoneWt').val())
-    let seventyPercentStoneWt = 0;
+    let seventyPercentStoneWt = 0, seventystoneWt = 0, seventybeadWt = 0, seventyextraStoneWt = 0;
+
     seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(2);
     seventyPercentStoneWtSplit = String(seventyPercentStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
     let code = seventyPercentStoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
+    seventystoneWt = (stoneWt * 0.7).toFixed(2);
+    seventystoneWtSplit = String(seventystoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let stoneWtCode = seventystoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
+    seventybeadWt = (beadWt * 0.7).toFixed(2);
+    seventybeadWtCodeSplit = String(seventybeadWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let beadWtCode = seventybeadWtCodeSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
+    seventyextraStoneWt = (extraStoneWt * 0.7).toFixed(2);
+    seventyextraStoneWtCodeSplit = String(seventyextraStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let extraStoneWtCode = seventyextraStoneWtCodeSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
     $(modal + ' #code').val(code.join(""))
+    $(modal + ' #stoneWtCode').val(stoneWtCode.join(""))
+    $(modal + ' #beadWtCode').val(beadWtCode.join(""))
+    $(modal + ' #extraStoneWtCode').val(extraStoneWtCode.join(""))
 
     let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
     let netWt = grossWt - seventyPercentStoneWt
