@@ -35,11 +35,14 @@ function calcTotalStoneWt(stoneWt, beadWt, extraStoneWt) {
   return totalStoneWt.toFixed(3);
 }
 
-function roundValue(value, step) {
-  step || (step = 1.0);
-  var inv = 1.0 / step;
-  return Math.round(value * inv) / inv;
-}
+// function sharpen(num) {
+//   const rem = num % 1
+//   if (rem < 0.5) {
+//     return Math.ceil(num / 0.5) * 0.5 + 0.5
+//   } else {
+//     return Math.floor(num / 0.5) * 0.5
+//   }
+// }
 
 module.exports = {
   createDesign: async (req, res, next) => {
@@ -295,27 +298,30 @@ module.exports = {
       for (let i = 0; i < designDataArr.length; i++) {
         let designNumber = designDataArr[i].designNumber
         let grossWt = parseFloat(designDataArr[i].grossWt)
-        let stoneWt = roundValue(parseFloat(designDataArr[i].stoneWt * percentage / 100), 0.5)
+        let stoneWt = parseFloat(designDataArr[i].stoneWt * percentage / 100)
+        // stoneWt = sharpen(stoneWt)
         let beadWt = parseFloat(designDataArr[i].beadWt  * percentage / 100)
         let extraStoneWt = parseFloat(designDataArr[i].extraStoneWt * percentage / 100)
-        let netWt = parseFloat(grossWt - (stoneWt  + beadWt + extraStoneWt))
+        
         let stonePrice = (parseFloat(req.body.stonePrice)).toFixed(2)
-        let stnCharges = roundValue((parseFloat(stoneWt + beadWt + extraStoneWt) * stonePrice), 0.5)
+        
+        // stnCharges = sharpen(stnCharges)
         
         totalGrossWt += grossWt
-        totalStnWt += stoneWt
-        totalBeadWt += beadWt
-        totalExtraStnWt += extraStoneWt
-        totalNetWt += netWt
-        totalStoneCharges += stnCharges
-
+        
         grossWt = parseFloat(grossWt).toFixed(3)
-        stoneWt = parseFloat(stoneWt).toFixed(3)
-        beadWt = parseFloat(beadWt).toFixed(3)
-        extraStoneWt = parseFloat(extraStoneWt).toFixed(3)
+        stoneWt = parseFloat(stoneWt).toFixed(2)
+        beadWt = parseFloat(beadWt).toFixed(2)
+        extraStoneWt = parseFloat(extraStoneWt).toFixed(2)
+		    let netWt = parseFloat(parseFloat(grossWt) - (parseFloat(stoneWt)  + parseFloat(beadWt) + parseFloat(extraStoneWt)))
         netWt = parseFloat(netWt).toFixed(3)
-        stnCharges = parseFloat(stnCharges).toFixed(2)
-
+        let stnCharges = (parseFloat(stoneWt) + parseFloat(beadWt) + parseFloat(extraStoneWt)) * parseFloat(stonePrice)
+        stnCharges = parseInt(stnCharges)
+        totalNetWt += parseFloat(netWt)
+        totalStnWt += parseFloat(stoneWt)
+        totalBeadWt += parseFloat(beadWt)
+        totalExtraStnWt += parseFloat(extraStoneWt)
+        totalStoneCharges += stnCharges
         
         let row = [(i + 1), designNumber, designDataArr[i].category.categoryName, grossWt, stoneWt, beadWt, extraStoneWt, netWt, stnCharges, designDataArr[i].purity];
 

@@ -155,14 +155,14 @@ function calcSeventyPercentWeight(modal) {
     let beadWt = isNaN(parseFloat($(modal + ' #beadWt').val())) ? 0 : parseFloat($(modal + ' #beadWt').val())
     let extraStoneWt = isNaN(parseFloat($(modal + ' #extraStoneWt').val())) ? 0 : parseFloat($(modal + ' #extraStoneWt').val())
     let seventyPercentStoneWt = 0;
-    seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(3);
+    seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(2);
     seventyPercentStoneWtSplit = String(seventyPercentStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
     let code = seventyPercentStoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
     $(modal + ' #code').val(code.join(""))
 
     let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
     let netWt = grossWt - seventyPercentStoneWt
-    $(modal + ' #netWt').val(netWt.toFixed(2))
+    $(modal + ' #netWt').val(netWt.toFixed(3))
     return seventyPercentStoneWt
 }
 
