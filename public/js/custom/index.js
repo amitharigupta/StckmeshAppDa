@@ -93,6 +93,7 @@ async function begin() {
     await getCategorys()    // get categories list api call
     await getDesigns()      // get designs list api call
     setDataTable()          // set designs list in datatable
+    await getTotalByStatus()
 }
 
 function encodeImageFileAsURL(fileobejct) {
@@ -404,6 +405,7 @@ async function deleteDesign() {
                     table.clear();
                     table.rows.add(designs.rows);
                     table.draw(false);
+                    await getTotalByStatus()
                     toastr.success(data.message)
                 }
                 else {
@@ -473,6 +475,7 @@ async function updateDesign() {
                     table.clear();
                     table.rows.add(designs.rows);
                     table.draw(false);
+                    await getTotalByStatus()
                     toastr.success(data.message)
                     base64String = ""
                     $('#updateDesignModal #imageName').val('')
@@ -603,6 +606,7 @@ async function addDesign() {
                     table.clear();
                     table.rows.add(designs.rows);
                     table.draw(false);
+                    await getTotalByStatus()
                     toastr.success(data.message)
                     base64String = '';
                     await resetFormFields()
@@ -1037,7 +1041,7 @@ $('#filterData').on('click', async function () {
         table.clear()
         table.rows.add(designs)
         table.draw(false)
-
+        await getTotalByStatus()
     } catch (error) {
         console.log(error);
     } finally {
@@ -1073,6 +1077,7 @@ async function deleteDesigns(IDs) {
                 table.clear();
                 table.rows.add(designs.rows);
                 table.draw(false);
+                await getTotalByStatus()
                 toastr.success(data.message)
             }
             else {
@@ -1111,11 +1116,10 @@ $('#DeleteAll').on('click', function () {
     }
 });
 
-function round(value, step) {
-    step || (step = 1.0);
-    var inv = 1.0 / step;
-    return Math.round(value * inv) / inv;
-}
-
-let valueRound = round(0.497, 0.5)
-console.log(valueRound.toFixed(2))
+async function getTotalByStatus() {
+    let table = $('#dataTable').DataTable()
+    let designsArr = table.rows({ search: 'applied' }).data().toArray()
+    let totalGrWt = designsArr.reduce((a, b) => { let grossWt = b.grossWt === null || b.grossWt === undefined ? 0.0 : parseFloat(b.grossWt); return a + grossWt }, 0).toFixed(3)
+    
+    $('#totalGrWt').text(totalGrWt)
+  }
