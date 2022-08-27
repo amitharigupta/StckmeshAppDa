@@ -72,6 +72,30 @@ let designFormFields = [
         ]
     },
     {
+        'displayName': 'Stone Weight Code',
+        'fieldName': 'stoneWtCode',
+        'validations': [
+            // { 'type': 'required', 'message': 'Colour is Required' },
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+        ]
+    },
+    {
+        'displayName': 'Beads Weight Code',
+        'fieldName': 'beadWtCode',
+        'validations': [
+            // { 'type': 'required', 'message': 'Colour is Required' },
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+        ]
+    },
+    {
+        'displayName': 'Extra Stone Weight Code',
+        'fieldName': 'extraStoneWtCode',
+        'validations': [
+            // { 'type': 'required', 'message': 'Colour is Required' },
+            // { 'type': 'alphabet', 'message': 'Code can have alphabets only' }
+        ]
+    },
+    {
         'displayName': 'Colour',
         'fieldName': 'color',
         'validations': [
@@ -93,6 +117,7 @@ async function begin() {
     await getCategorys()    // get categories list api call
     await getDesigns()      // get designs list api call
     setDataTable()          // set designs list in datatable
+    await getTotalByStatus()
 }
 
 function encodeImageFileAsURL(fileobejct) {
@@ -154,15 +179,32 @@ function calcSeventyPercentWeight(modal) {
     let stoneWt = isNaN(parseFloat($(modal + ' #stoneWt').val())) ? 0 : parseFloat($(modal + ' #stoneWt').val())
     let beadWt = isNaN(parseFloat($(modal + ' #beadWt').val())) ? 0 : parseFloat($(modal + ' #beadWt').val())
     let extraStoneWt = isNaN(parseFloat($(modal + ' #extraStoneWt').val())) ? 0 : parseFloat($(modal + ' #extraStoneWt').val())
-    let seventyPercentStoneWt = 0;
-    seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(3);
+    let seventyPercentStoneWt = 0, seventystoneWt = 0, seventybeadWt = 0, seventyextraStoneWt = 0;
+
+    seventyPercentStoneWt = ((stoneWt + beadWt + extraStoneWt) * 0.7).toFixed(2);
     seventyPercentStoneWtSplit = String(seventyPercentStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
     let code = seventyPercentStoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
+    seventystoneWt = (stoneWt * 0.7).toFixed(2);
+    seventystoneWtSplit = String(seventystoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let stoneWtCode = seventystoneWtSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
+    seventybeadWt = (beadWt * 0.7).toFixed(2);
+    seventybeadWtCodeSplit = String(seventybeadWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let beadWtCode = seventybeadWtCodeSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
+    seventyextraStoneWt = (extraStoneWt * 0.7).toFixed(2);
+    seventyextraStoneWtCodeSplit = String(seventyextraStoneWt).split('').map(str => isNaN(Number(str)) ? str : Number(str));
+    let extraStoneWtCode = seventyextraStoneWtCodeSplit.map((num) => codeObj[num] == undefined ? '.' : codeObj[num])
+
     $(modal + ' #code').val(code.join(""))
+    $(modal + ' #stoneWtCode').val(stoneWtCode.join(""))
+    $(modal + ' #beadWtCode').val(beadWtCode.join(""))
+    $(modal + ' #extraStoneWtCode').val(extraStoneWtCode.join(""))
 
     let grossWt = isNaN(parseFloat($(modal + ' #grossWt').val())) ? 0 : parseFloat($(modal + ' #grossWt').val())
     let netWt = grossWt - seventyPercentStoneWt
-    $(modal + ' #netWt').val(netWt.toFixed(2))
+    $(modal + ' #netWt').val(netWt.toFixed(3))
     return seventyPercentStoneWt
 }
 
@@ -404,6 +446,7 @@ async function deleteDesign() {
                     table.clear();
                     table.rows.add(designs.rows);
                     table.draw(false);
+                    await getTotalByStatus()
                     toastr.success(data.message)
                 }
                 else {
@@ -473,6 +516,7 @@ async function updateDesign() {
                     table.clear();
                     table.rows.add(designs.rows);
                     table.draw(false);
+                    await getTotalByStatus()
                     toastr.success(data.message)
                     base64String = ""
                     $('#updateDesignModal #imageName').val('')
@@ -603,6 +647,7 @@ async function addDesign() {
                     table.clear();
                     table.rows.add(designs.rows);
                     table.draw(false);
+                    await getTotalByStatus()
                     toastr.success(data.message)
                     base64String = '';
                     await resetFormFields()
@@ -1037,7 +1082,7 @@ $('#filterData').on('click', async function () {
         table.clear()
         table.rows.add(designs)
         table.draw(false)
-
+        await getTotalByStatus()
     } catch (error) {
         console.log(error);
     } finally {
@@ -1073,6 +1118,7 @@ async function deleteDesigns(IDs) {
                 table.clear();
                 table.rows.add(designs.rows);
                 table.draw(false);
+                await getTotalByStatus()
                 toastr.success(data.message)
             }
             else {
@@ -1111,11 +1157,10 @@ $('#DeleteAll').on('click', function () {
     }
 });
 
-function round(value, step) {
-    step || (step = 1.0);
-    var inv = 1.0 / step;
-    return Math.round(value * inv) / inv;
-}
-
-let valueRound = round(0.497, 0.5)
-console.log(valueRound.toFixed(2))
+async function getTotalByStatus() {
+    let table = $('#dataTable').DataTable()
+    let designsArr = table.rows({ search: 'applied' }).data().toArray()
+    let totalGrWt = designsArr.reduce((a, b) => { let grossWt = b.grossWt === null || b.grossWt === undefined ? 0.0 : parseFloat(b.grossWt); return a + grossWt }, 0).toFixed(3)
+    
+    $('#totalGrWt').text(totalGrWt)
+  }
